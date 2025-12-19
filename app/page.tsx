@@ -1,65 +1,211 @@
-import Image from "next/image";
+"use client";
+
+import Link from "next/link";
+import {
+  SparklesIcon,
+  PhotoIcon,
+  ChatBubbleLeftRightIcon,
+  MegaphoneIcon,
+  TagIcon,
+  SwatchIcon
+} from "@heroicons/react/24/outline";
+
+interface Feature {
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+  href: string;
+  category: string;
+  status?: "available" | "coming-soon";
+}
+
+const features: Feature[] = [
+  // Konten & Branding
+  {
+    title: "Generator Deskripsi & judul Produk",
+    description: "Buat deskripsi & judul produk yang menarik dan persuasif secara otomatis dengan AI",
+    icon: SparklesIcon,
+    href: "/features/product-description",
+    category: "Konten & Branding",
+    status: "available"
+  },
+  {
+    title: "Generator Caption Sosmed",
+    description: "Buat caption viral untuk IG, TikTok, FB dengan hashtag otomatis",
+    icon: MegaphoneIcon,
+    href: "/features/social-caption",
+    category: "Konten & Branding",
+    status: "available"
+
+  },
+  {
+    title: "Storytelling Produk",
+    description: "Ceritakan kisah di balik produk Anda untuk koneksi lebih dalam dengan pelanggan",
+    icon: ChatBubbleLeftRightIcon,
+    href: "/features/product-story",
+    category: "Konten & Branding",
+    status: "coming-soon"
+  },
+
+  {
+    title: "Generator Judul & Deskripsi dari Gambar",
+    description: "Upload foto produk dan buat judul/deskripsi menarik otomatis untuk marketplace",
+    icon: SparklesIcon,
+    href: "/features/image-analyzer",
+    category: "Konten & Branding",
+    status: "available"
+  },
+
+  // Visual & Media
+  {
+    title: "Background Remover & AI Background",
+    description: "Hapus background dan ganti dengan latar yang profesional (putih, studio, dll)",
+    icon: SwatchIcon,
+    href: "/features/background-editor",
+    category: "Visual & Media",
+    status: "coming-soon"
+  },
+  {
+    title: "Enhance Foto Produk",
+    description: "Perbaiki foto buram, gelap, atau kurang tajam menjadi lebih profesional",
+    icon: PhotoIcon,
+    href: "/features/photo-enhancer",
+    category: "Visual & Media",
+    status: "coming-soon"
+  },
+
+  // Customer Service
+  {
+    title: "Template Customer Service",
+    description: "Template balasan CS yang ramah, profesional, dan persuasif",
+    icon: ChatBubbleLeftRightIcon,
+    href: "/features/cs-templates",
+    category: "Customer Service",
+    status: "coming-soon"
+  },
+  {
+    title: "Follow-up Pembeli Otomatis",
+    description: "Template follow-up setelah checkout dan barang sampai",
+    icon: ChatBubbleLeftRightIcon,
+    href: "/features/buyer-followup",
+    category: "Customer Service",
+    status: "coming-soon"
+  },
+  {
+    title: "Respon Komplain",
+    description: "Balas komplain dengan bahasa sopan dan solusi yang tepat",
+    icon: ChatBubbleLeftRightIcon,
+    href: "/features/complaint-response",
+    category: "Customer Service",
+    status: "coming-soon"
+  }
+];
+
+const categories = Array.from(new Set(features.map(f => f.category)));
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-gray-900 dark:to-gray-800">
+      {/* Header */}
+      <div className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+            UMKM Tools AI
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="mt-2 text-gray-600 dark:text-gray-300">
+            Kumpulan tools AI untuk membantu bisnis UMKM Anda berkembang lebih cepat
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {categories.map((category) => (
+          <div key={category} className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              {category}
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {features
+                .filter((feature) => feature.category === category)
+                .map((feature) => {
+                  const Icon = feature.icon;
+                  const isAvailable = feature.status === "available";
+
+                  return (
+                    <Link
+                      key={feature.title}
+                      href={isAvailable ? feature.href : "#"}
+                      className={`group relative bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden ${isAvailable
+                        ? "hover:scale-105 cursor-pointer"
+                        : "cursor-not-allowed opacity-75"
+                        }`}
+                    >
+                      <div className="p-6">
+                        {/* Status Badge */}
+                        {!isAvailable && (
+                          <div className="absolute top-4 right-4">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                              Coming Soon
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Icon */}
+                        <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg mb-4 group-hover:scale-110 transition-transform duration-300">
+                          <Icon className="w-6 h-6 text-white" />
+                        </div>
+
+                        {/* Content */}
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                          {feature.title}
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-300 text-sm">
+                          {feature.description}
+                        </p>
+
+                        {/* Hover Arrow */}
+                        {isAvailable && (
+                          <div className="mt-4 flex items-center text-purple-600 dark:text-purple-400 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            Mulai Gunakan
+                            <svg
+                              className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Gradient Border Effect */}
+                      {isAvailable && (
+                        <div className="absolute inset-0 border-2 border-transparent group-hover:border-purple-500 rounded-xl transition-colors duration-300" />
+                      )}
+                    </Link>
+                  );
+                })}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Footer */}
+      <div className="border-t border-gray-200 dark:border-gray-800 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <p className="text-center text-gray-600 dark:text-gray-400 text-sm">
+            Dibuat dengan ❤️ untuk UMKM Indonesia
+          </p>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
