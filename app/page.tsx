@@ -38,14 +38,6 @@ const features: Feature[] = [
     status: "available"
 
   },
-  {
-    title: "Storytelling Produk",
-    description: "Ceritakan kisah di balik produk Anda untuk koneksi lebih dalam dengan pelanggan",
-    icon: ChatBubbleLeftRightIcon,
-    href: "/features/product-story",
-    category: "Konten & Branding",
-    status: "coming-soon"
-  },
 
   {
     title: "Generator Judul & Deskripsi dari Gambar",
@@ -58,20 +50,20 @@ const features: Feature[] = [
 
   // Visual & Media
   {
-    title: "Background Remover & AI Background",
-    description: "Hapus background dan ganti dengan latar yang profesional (putih, studio, dll)",
+    title: "Background Remover",
+    description: "Hapus background dan ganti dengan latar yang profesional (putih, merah, dll)",
     icon: SwatchIcon,
     href: "/features/background-editor",
     category: "Visual & Media",
-    status: "coming-soon"
+    status: "available"
   },
   {
-    title: "Enhance Foto Produk",
-    description: "Perbaiki foto buram, gelap, atau kurang tajam menjadi lebih profesional",
+    title: "Enhance Foto Produk (AI Studio)",
+    description: "Ubah foto produk biasa menjadi foto studio profesional dengan teknologi AI Generatif",
     icon: PhotoIcon,
     href: "/features/photo-enhancer",
     category: "Visual & Media",
-    status: "coming-soon"
+    status: "available"
   },
 
   // Customer Service
@@ -81,23 +73,7 @@ const features: Feature[] = [
     icon: ChatBubbleLeftRightIcon,
     href: "/features/cs-templates",
     category: "Customer Service",
-    status: "coming-soon"
-  },
-  {
-    title: "Follow-up Pembeli Otomatis",
-    description: "Template follow-up setelah checkout dan barang sampai",
-    icon: ChatBubbleLeftRightIcon,
-    href: "/features/buyer-followup",
-    category: "Customer Service",
-    status: "coming-soon"
-  },
-  {
-    title: "Respon Komplain",
-    description: "Balas komplain dengan bahasa sopan dan solusi yang tepat",
-    icon: ChatBubbleLeftRightIcon,
-    href: "/features/complaint-response",
-    category: "Customer Service",
-    status: "coming-soon"
+    status: "available"
   }
 ];
 
