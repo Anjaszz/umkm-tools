@@ -13,8 +13,12 @@ import {
     MagnifyingGlassIcon,
     UserGroupIcon,
     PhotoIcon,
-    ArrowLeftIcon
+    ArrowLeftIcon,
+    ArrowRightOnRectangleIcon
 } from '@heroicons/react/24/outline';
+import { createClient } from '@/utils/supabase/client';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 const features = [
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
@@ -28,7 +32,30 @@ const features = [
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
+    const [user, setUser] = useState<any>(null);
     const pathname = usePathname();
+    const router = useRouter();
+    const supabase = createClient();
+
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+        };
+        getUser();
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
+
+        return () => subscription.unsubscribe();
+    }, []);
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        router.push('/');
+        router.refresh();
+    };
 
     return (
         <header className="sticky-header sticky top-0 z-50">
@@ -53,7 +80,34 @@ export default function Header() {
 
                     {/* Desktop Navigation / Auth Buttons */}
                     <div className="hidden md:flex items-center gap-4">
-                        {pathname === '/' ? (
+                        {user ? (
+                            <div className="flex items-center gap-6">
+                                <nav className="flex space-x-1 lg:space-x-2">
+                                    {features.map((item) => {
+                                        const isActive = pathname === item.href;
+                                        return (
+                                            <Link
+                                                key={item.href}
+                                                href={item.href}
+                                                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${isActive
+                                                    ? 'text-[#2ECC71] bg-[#2ECC71]/10'
+                                                    : 'text-gray-600 hover:text-[#2ECC71] hover:bg-gray-50'
+                                                    }`}
+                                            >
+                                                {item.name}
+                                            </Link>
+                                        );
+                                    })}
+                                </nav>
+                                <button
+                                    onClick={handleLogout}
+                                    className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-red-500 hover:bg-red-50 transition-all border border-transparent hover:border-red-100"
+                                >
+                                    <ArrowRightOnRectangleIcon className="w-5 h-5" />
+                                    Keluar
+                                </button>
+                            </div>
+                        ) : pathname === '/' ? (
                             <div className="flex items-center gap-4">
                                 <Link
                                     href="/login"
@@ -69,36 +123,20 @@ export default function Header() {
                                 </Link>
                             </div>
                         ) : (
-                            <nav className="flex space-x-1 lg:space-x-2">
-                                {features.map((item) => {
-                                    const isActive = pathname === item.href;
-                                    return (
-                                        <Link
-                                            key={item.href}
-                                            href={item.href}
-                                            className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${isActive
-                                                ? 'text-[#2ECC71] bg-[#2ECC71]/10'
-                                                : 'text-gray-600 hover:text-[#2ECC71] hover:bg-gray-50'
-                                                }`}
-                                        >
-                                            {item.name}
-                                        </Link>
-                                    );
-                                })}
-                            </nav>
+                            <div className="flex items-center gap-4">
+                                <Link
+                                    href="/login"
+                                    className="px-6 py-2.5 rounded-xl text-sm font-bold text-[#2ECC71] bg-[#2ECC71]/10 hover:bg-[#2ECC71]/20 transition-all"
+                                >
+                                    Masuk Ke Akun
+                                </Link>
+                            </div>
                         )}
                     </div>
 
                     {/* Mobile Menu Button / Auth Buttons */}
                     <div className="md:hidden flex items-center gap-3">
-                        {pathname === '/' ? (
-                            <Link
-                                href="/login"
-                                className="px-4 py-2 rounded-lg text-xs font-bold bg-[#2ECC71]/10 text-[#2ECC71]"
-                            >
-                                Masuk
-                            </Link>
-                        ) : (
+                        {user ? (
                             <button
                                 onClick={() => setIsOpen(!isOpen)}
                                 className="p-2 rounded-lg text-gray-600 hover:text-[#2ECC71] hover:bg-gray-50 transition-all"
@@ -109,6 +147,20 @@ export default function Header() {
                                     <Bars3Icon className="w-6 h-6" />
                                 )}
                             </button>
+                        ) : pathname === '/' ? (
+                            <Link
+                                href="/login"
+                                className="px-4 py-2 rounded-lg text-xs font-bold bg-[#2ECC71]/10 text-[#2ECC71]"
+                            >
+                                Masuk
+                            </Link>
+                        ) : (
+                            <Link
+                                href="/login"
+                                className="px-4 py-2 rounded-lg text-xs font-bold bg-[#2ECC71]/10 text-[#2ECC71]"
+                            >
+                                Login
+                            </Link>
                         )}
                     </div>
                 </div>
