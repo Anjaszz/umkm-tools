@@ -2,30 +2,31 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeftIcon, ChatBubbleLeftRightIcon, ClipboardIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, ChatBubbleLeftRightIcon, ClipboardIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 
 interface Option {
     id: string;
     label: string;
+    description: string;
     promptPart: string;
+    icon?: string;
 }
 
 const messageTypes: Option[] = [
-    { id: "greeting", label: "Sapaan Awal / Greeting", promptPart: "Greeting/Sapaan awal yang ramah untuk customer baru." },
-    { id: "complaint", label: "Balasan Komplain", promptPart: "Respon untuk komplain pelanggan, minta maaf dan tawarkan solusi." },
-    { id: "shipping", label: "Info Pengiriman/Resi", promptPart: "Informasi status pengiriman atau update nomor resi." },
-    { id: "stock", label: "Stok Kosong/Ready", promptPart: "Informasi ketersediaan stok produk." },
-    { id: "review", label: "Minta Ulasan/Review", promptPart: "Permintaan sopan untuk memberikan ulasan positif bintang 5." },
-    { id: "followup", label: "Follow-up Pesanan", promptPart: "Follow-up pesanan yang belum dibayar atau dikonfirmasi." },
+    { id: "greeting", label: "Sapaan Awal / Greeting", description: "Greeting/Sapaan awal yang ramah", promptPart: "Greeting/Sapaan awal yang ramah untuk customer baru.", icon: "👋" },
+    { id: "complaint", label: "Balasan Komplain", description: "Respon solutif untuk komplain", promptPart: "Respon untuk komplain pelanggan, minta maaf dan tawarkan solusi.", icon: "🛠️" },
+    { id: "shipping", label: "Info Pengiriman/Resi", description: "Update status & nomor resi", promptPart: "Informasi status pengiriman atau update nomor resi.", icon: "📦" },
+    { id: "stock", label: "Stok Kosong/Ready", description: "Info ketersediaan produk", promptPart: "Informasi ketersediaan stok produk.", icon: "📊" },
+    { id: "review", label: "Minta Ulasan/Review", description: "Permintaan bintang 5", promptPart: "Permintaan sopan untuk memberikan ulasan positif bintang 5.", icon: "⭐" },
+    { id: "followup", label: "Follow-up Pesanan", description: "Cek pembayaran/konfirmasi", promptPart: "Follow-up pesanan yang belum dibayar atau dikonfirmasi.", icon: "🔔" },
 ];
 
 const tones: Option[] = [
-     { id: "olshop", label: "Khas Toko Online", promptPart: "Gaya bahasa khas admin online shop, panggil Sis/Gan/Kak, ramah, banyak emoji, to the point." },
-    { id: "friendly", label: "Ramah & Akrab (Friendly)", promptPart: "Nada bicara ramah, akrab, pakai emoji, seperti teman." },
-    { id: "formal", label: "Formal & Profesional", promptPart: "Nada bicara formal, sopan, profesional, baku." },
-    { id: "empathetic", label: "Empati & Maaf", promptPart: "Nada bicara penuh empati, memohon maaf, sabar (cocok untuk komplain)." },
-    { id: "enthusiastic", label: "Antusias & Semangat", promptPart: "Nada bicara semangat, ceria, pakai tanda seru positif." },
-   
+    { id: "olshop", label: "Khas Toko Online", description: "Admin Olshop Sis/Gan", promptPart: "Gaya bahasa khas admin online shop, panggil Sis/Gan/Kak, ramah, banyak emoji, to the point.", icon: "📱" },
+    { id: "friendly", label: "Ramah & Akrab", description: "Gaya bicara santai", promptPart: "Nada bicara ramah, akrab, pakai emoji, seperti teman.", icon: "😊" },
+    { id: "formal", label: "Formal & Profesional", description: "Bahasa baku & sopan", promptPart: "Nada bicara formal, sopan, profesional, baku.", icon: "👔" },
+    { id: "empathetic", label: "Empati & Maaf", description: "Penuh pengertian", promptPart: "Nada bicara penuh empati, memohon maaf, sabar (cocok untuk komplain).", icon: "🤝" },
+    { id: "enthusiastic", label: "Antusias & Semangat", description: "Ceria & persuasif", promptPart: "Nada bicara semangat, ceria, pakai tanda seru positif.", icon: "🚀" },
 ];
 
 export default function CSTemplateGenerator() {
@@ -38,6 +39,10 @@ export default function CSTemplateGenerator() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [showCopyNotif, setShowCopyNotif] = useState(false);
+
+    // Dropdown States
+    const [isTypeOpen, setIsTypeOpen] = useState(false);
+    const [isToneOpen, setIsToneOpen] = useState(false);
 
     const handleGenerate = async () => {
         setLoading(true);
@@ -81,90 +86,156 @@ export default function CSTemplateGenerator() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-teal-50 dark:from-gray-900 dark:to-gray-800">
+        <div className="min-h-screen bg-[#E8ECEF]">
             {showCopyNotif && (
-                <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in-down">
+                <div className="fixed top-24 right-4 z-50 bg-[#2ECC71] text-white px-6 py-3 rounded-2xl shadow-xl font-bold flex items-center gap-2 animate-bounce-short">
+                    <ClipboardIcon className="w-5 h-5" />
                     Pesan berhasil disalin!
                 </div>
             )}
 
-            {/* Header */}
-            <div className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    <Link
-                        href="/"
-                        className="inline-flex items-center text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 mb-4 transition-colors"
-                    >
-                        <ArrowLeftIcon className="w-5 h-5 mr-2" />
-                        Kembali ke Dashboard
-                    </Link>
-                    <div className="flex items-center gap-3">
-                        <ChatBubbleLeftRightIcon className="w-10 h-10 text-green-600 dark:text-green-400" />
-                        <div>
-                            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-                                Template Customer Service
-                            </h1>
-                            <p className="mt-2 text-gray-600 dark:text-gray-300">
-                                Buat balasan chat otomatis yang ramah dan profesional dalam hitungan detik
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {(isTypeOpen || isToneOpen) && (
+                <div
+                    className="fixed inset-0 z-30 bg-transparent"
+                    onClick={() => {
+                        setIsTypeOpen(false);
+                        setIsToneOpen(false);
+                    }}
+                />
+            )}
 
-            <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+            <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-12">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                     {/* Input Section */}
-                    <div className="lg:col-span-1 space-y-6">
-                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-                            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
+                    <div className={`lg:col-span-1 space-y-6 ${(isTypeOpen || isToneOpen) ? 'relative z-40' : ''}`}>
+                        <div className="clay-card p-6">
+                            <h2 className="text-xl font-bold text-[#1a1f24] mb-6">
                                 Konfigurasi Pesan
                             </h2>
 
                             <div className="space-y-5">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    <label className="block text-sm font-bold text-[#1a1f24] mb-2">
                                         Tipe Pesan
                                     </label>
-                                    <select
-                                        value={selectedType}
-                                        onChange={(e) => {
-                                            setSelectedType(e.target.value);
-                                            setCustomerName("");
-                                            setContext("");
-                                        }}
-                                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white"
-                                    >
-                                        <option value="" disabled>-- Pilih Tipe Pesan --</option>
-                                        {messageTypes.map(type => (
-                                            <option key={type.id} value={type.id}>{type.label}</option>
-                                        ))}
-                                    </select>
+                                    <div className="relative z-40">
+                                        <button
+                                            onClick={() => {
+                                                setIsTypeOpen(!isTypeOpen);
+                                                setIsToneOpen(false);
+                                            }}
+                                            className="clay-input w-full px-4 py-3 flex items-center justify-between text-left transition-all hover:border-[#2ECC71]"
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-xl">{messageTypes.find(t => t.id === selectedType)?.icon || "📝"}</span>
+                                                <div>
+                                                    <div className="text-sm font-bold text-[#1a1f24]">
+                                                        {messageTypes.find(t => t.id === selectedType)?.label || "Pilih Tipe Pesan"}
+                                                    </div>
+                                                    {selectedType && (
+                                                        <div className="text-[10px] text-[#1a1f24]/60 font-medium leading-tight">
+                                                            {messageTypes.find(t => t.id === selectedType)?.description}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <ChevronDownIcon className={`w-5 h-5 text-[#2ECC71] transition-transform ${isTypeOpen ? 'rotate-180' : ''}`} />
+                                        </button>
+
+                                        {isTypeOpen && (
+                                            <div className="absolute z-50 w-full mt-2 clay-card p-2 animate-fade-in-up shadow-2xl overflow-hidden border-[#2ECC71]/20">
+                                                <div className="max-h-60 overflow-y-auto custom-scrollbar">
+                                                    {messageTypes.map((type) => (
+                                                        <button
+                                                            key={type.id}
+                                                            onClick={() => {
+                                                                setSelectedType(type.id);
+                                                                setCustomerName("");
+                                                                setContext("");
+                                                                setIsTypeOpen(false);
+                                                            }}
+                                                            className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left mb-1 last:mb-0 ${selectedType === type.id
+                                                                ? 'bg-[#2ECC71]/10 border-2 border-[#2ECC71]/30'
+                                                                : 'hover:bg-gray-50 border-2 border-transparent'
+                                                                }`}
+                                                        >
+                                                            <span className="text-2xl">{type.icon}</span>
+                                                            <div>
+                                                                <div className="text-sm font-bold text-[#1a1f24]">{type.label}</div>
+                                                                <div className="text-xs text-[#1a1f24]/60 font-medium">{type.description}</div>
+                                                            </div>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
 
                                 {selectedType && (
                                     <div className="space-y-5 animate-fade-in-up">
 
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            <label className="block text-sm font-bold text-[#1a1f24] mb-2">
                                                 Tone / Nada Bicara
                                             </label>
-                                            <select
-                                                value={selectedTone}
-                                                onChange={(e) => setSelectedTone(e.target.value)}
-                                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white"
-                                            >
-                                                {tones.map(tone => (
-                                                    <option key={tone.id} value={tone.id}>{tone.label}</option>
-                                                ))}
-                                            </select>
+                                            <div className="relative z-40">
+                                                <button
+                                                    onClick={() => {
+                                                        setIsToneOpen(!isToneOpen);
+                                                        setIsTypeOpen(false);
+                                                    }}
+                                                    className="clay-input w-full px-4 py-3 flex items-center justify-between text-left transition-all hover:border-[#2ECC71]"
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <span className="text-xl">{tones.find(t => t.id === selectedTone)?.icon || "🎭"}</span>
+                                                        <div>
+                                                            <div className="text-sm font-bold text-[#1a1f24]">
+                                                                {tones.find(t => t.id === selectedTone)?.label || "Pilih Tone"}
+                                                            </div>
+                                                            {selectedTone && (
+                                                                <div className="text-[10px] text-[#1a1f24]/60 font-medium leading-tight">
+                                                                    {tones.find(t => t.id === selectedTone)?.description}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <ChevronDownIcon className={`w-5 h-5 text-[#2ECC71] transition-transform ${isToneOpen ? 'rotate-180' : ''}`} />
+                                                </button>
+
+                                                {isToneOpen && (
+                                                    <div className="absolute z-50 w-full mt-2 clay-card p-2 animate-fade-in-up shadow-2xl overflow-hidden border-[#2ECC71]/20">
+                                                        <div className="max-h-60 overflow-y-auto custom-scrollbar">
+                                                            {tones.map((tone) => (
+                                                                <button
+                                                                    key={tone.id}
+                                                                    onClick={() => {
+                                                                        setSelectedTone(tone.id);
+                                                                        setIsToneOpen(false);
+                                                                    }}
+                                                                    className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left mb-1 last:mb-0 ${selectedTone === tone.id
+                                                                        ? 'bg-[#2ECC71]/10 border-2 border-[#2ECC71]/30'
+                                                                        : 'hover:bg-gray-50 border-2 border-transparent'
+                                                                        }`}
+                                                                >
+                                                                    <span className="text-2xl">{tone.icon}</span>
+                                                                    <div>
+                                                                        <div className="text-sm font-bold text-[#1a1f24]">{tone.label}</div>
+                                                                        <div className="text-xs text-[#1a1f24]/60 font-medium">{tone.description}</div>
+                                                                    </div>
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
 
                                         {selectedType === "greeting" && (
                                             <>
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                    <label className="block text-sm font-bold text-[#1a1f24] mb-2">
                                                         Nama Toko
                                                     </label>
                                                     <input
@@ -173,11 +244,11 @@ export default function CSTemplateGenerator() {
                                                         // Actually let's use a dynamic object for inputs to keep it clean
                                                         onChange={(e) => setCustomerName(e.target.value)}
                                                         placeholder="Contoh: Toko Hijab Cantik"
-                                                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white"
+                                                        className="clay-input w-full px-4 py-2"
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                    <label className="block text-sm font-bold text-[#1a1f24] mb-2">
                                                         Jam Operasional & Deskripsi Singkat
                                                     </label>
                                                     <textarea
@@ -185,7 +256,7 @@ export default function CSTemplateGenerator() {
                                                         onChange={(e) => setContext(e.target.value)}
                                                         placeholder="Contoh: Buka Senin-Jumat 08.00 - 17.00. Kami menjual berbagai macam hijab premium."
                                                         rows={3}
-                                                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white"
+                                                        className="clay-input w-full px-4 py-2 custom-scrollbar resize-none"
                                                     />
                                                 </div>
                                             </>
@@ -194,7 +265,7 @@ export default function CSTemplateGenerator() {
                                         {selectedType === "complaint" && (
                                             <>
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                    <label className="block text-sm font-bold text-[#1a1f24] mb-2">
                                                         Nama Customer
                                                     </label>
                                                     <input
@@ -202,11 +273,11 @@ export default function CSTemplateGenerator() {
                                                         value={customerName}
                                                         onChange={(e) => setCustomerName(e.target.value)}
                                                         placeholder="Contoh: Kak Budi"
-                                                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white"
+                                                        className="clay-input w-full px-4 py-2"
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                    <label className="block text-sm font-bold text-[#1a1f24] mb-2">
                                                         Detail Masalah / Konteks
                                                     </label>
                                                     <textarea
@@ -214,7 +285,7 @@ export default function CSTemplateGenerator() {
                                                         onChange={(e) => setContext(e.target.value)}
                                                         placeholder="Contoh: Barang rusak saat diterima, minta refund."
                                                         rows={4}
-                                                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white"
+                                                        className="clay-input w-full px-4 py-2 custom-scrollbar resize-none"
                                                     />
                                                 </div>
                                             </>
@@ -223,7 +294,7 @@ export default function CSTemplateGenerator() {
                                         {selectedType !== "greeting" && selectedType !== "complaint" && (
                                             <>
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                    <label className="block text-sm font-bold text-[#1a1f24] mb-2">
                                                         Nama Customer (Opsional)
                                                     </label>
                                                     <input
@@ -231,11 +302,11 @@ export default function CSTemplateGenerator() {
                                                         value={customerName}
                                                         onChange={(e) => setCustomerName(e.target.value)}
                                                         placeholder="Contoh: Kak Budi"
-                                                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white"
+                                                        className="clay-input w-full px-4 py-2"
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                    <label className="block text-sm font-bold text-[#1a1f24] mb-2">
                                                         {selectedType === "shipping" ? "Nomor Resi / Status Pengiriman" :
                                                             selectedType === "stock" ? "Detail Produk / Stok" :
                                                                 selectedType === "review" ? "Detail Produk yang Dibeli" :
@@ -252,7 +323,7 @@ export default function CSTemplateGenerator() {
                                                                         "Contoh: Pesanan #123 belum dibayar."
                                                         }
                                                         rows={4}
-                                                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white"
+                                                        className="clay-input w-full px-4 py-2 custom-scrollbar resize-none"
                                                     />
                                                 </div>
                                             </>
@@ -261,7 +332,7 @@ export default function CSTemplateGenerator() {
                                         <button
                                             onClick={handleGenerate}
                                             disabled={loading}
-                                            className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform active:scale-95 transition-all flex items-center justify-center gap-2"
+                                            className="clay-button w-full py-3 px-6 rounded-2xl transform active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             {loading ? "Sedang Menulis..." : "Buat Template Pesan"}
                                         </button>
@@ -277,29 +348,29 @@ export default function CSTemplateGenerator() {
 
                     {/* Result Section */}
                     <div className="lg:col-span-2">
-                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 h-full flex flex-col">
-                            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center justify-between">
+                        <div className="clay-card p-6 h-full flex flex-col">
+                            <h2 className="text-xl font-bold text-[#1a1f24] mb-6 flex items-center justify-between">
                                 <span>Preview Pesan</span>
                                 {generatedMessage && (
                                     <button
                                         onClick={copyToClipboard}
-                                        className="text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white px-3 py-1 rounded-lg flex items-center gap-2 transition-colors"
+                                        className="text-xs bg-white hover:bg-gray-50 text-[#1a1f24] px-4 py-2 rounded-xl flex items-center gap-2 transition-all font-bold border-2 border-green-500/20 shadow-sm"
                                     >
-                                        <ClipboardIcon className="w-4 h-4" />
+                                        <ClipboardIcon className="w-4 h-4 text-[#2ECC71]" />
                                         Salin Teks
                                     </button>
                                 )}
                             </h2>
 
-                            <div className="flex-1 bg-gray-50 dark:bg-gray-900 rounded-xl p-6 border-2 border-dashed border-gray-200 dark:border-gray-700">
+                            <div className="flex-1 bg-white/50 backdrop-blur-sm rounded-2xl p-6 border-2 border-dashed border-[#2ECC71]/30 overflow-y-auto custom-scrollbar max-h-[600px]">
                                 {generatedMessage ? (
-                                    <div className="prose dark:prose-invert max-w-none whitespace-pre-wrap text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
+                                    <div className="prose max-w-none whitespace-pre-wrap text-[#1a1f24] font-medium text-lg leading-relaxed">
                                         {generatedMessage}
                                     </div>
                                 ) : (
-                                    <div className="h-full flex flex-col items-center justify-center text-gray-400">
-                                        <ChatBubbleLeftRightIcon className="w-16 h-16 mb-4 opacity-50" />
-                                        <p className="text-lg">Pesanan template Anda akan muncul di sini</p>
+                                    <div className="h-full flex flex-col items-center justify-center text-[#1a1f24]/40">
+                                        <ChatBubbleLeftRightIcon className="w-16 h-16 mb-4 opacity-30 text-[#2ECC71]" />
+                                        <p className="text-lg font-bold">Pesan template Anda akan muncul di sini</p>
                                     </div>
                                 )}
                             </div>

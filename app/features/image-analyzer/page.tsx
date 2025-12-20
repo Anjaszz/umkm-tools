@@ -326,44 +326,20 @@ export default function ProductDescriptionGenerator() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-[#E8ECEF]">
       {showCopyNotif && (
-        <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
+        <div className="fixed top-24 right-4 z-50 bg-[#2ECC71] text-white px-6 py-3 rounded-2xl shadow-xl font-bold flex items-center gap-2 animate-bounce-short">
           Berhasil dicopy ke clipboard!
         </div>
       )}
-
-      {/* Header */}
-      <div className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link
-            href="/"
-            className="inline-flex items-center text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 mb-4 transition-colors"
-          >
-            <ArrowLeftIcon className="w-5 h-5 mr-2" />
-            Kembali ke Dashboard
-          </Link>
-          <div className="flex items-center gap-3">
-            <SparklesIcon className="w-10 h-10 text-purple-600 dark:text-purple-400" />
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-                Generator Judul & Deskripsi Produk
-              </h1>
-              <p className="mt-2 text-gray-600 dark:text-gray-300">
-                Upload foto produk dan kombinasikan berbagai style untuk hasil yang sempurna
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Panel - Image Upload */}
           <div className="lg:col-span-1">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sticky top-6">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+            <div className="clay-card p-6 sticky top-6">
+              <h2 className="text-xl font-bold text-[#1a1f24] mb-4">
                 1. Upload Gambar Produk
               </h2>
 
@@ -371,7 +347,7 @@ export default function ProductDescriptionGenerator() {
                 type="file"
                 accept="image/*"
                 onChange={handleImageUpload}
-                className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 dark:file:bg-purple-900 dark:file:text-purple-300 mb-4"
+                className="w-full text-sm text-[#1a1f24] font-bold file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-[#2ECC71]/10 file:text-[#2ECC71] hover:file:bg-[#2ECC71]/20 mb-4 cursor-pointer"
               />
 
               {selectedImage && (
@@ -387,7 +363,7 @@ export default function ProductDescriptionGenerator() {
               )}
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-bold text-[#1a1f24] mb-2">
                   Informasi Tambahan (Opsional)
                 </label>
                 <textarea
@@ -395,9 +371,9 @@ export default function ProductDescriptionGenerator() {
                   onChange={(e) => setAdditionalInfo(e.target.value)}
                   placeholder="Contoh: Bahan cotton premium, ukuran L, warna navy, cocok untuk anak umur 5-7 tahun..."
                   rows={4}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white resize-none"
+                  className="clay-input w-full px-3 py-2 text-sm resize-none"
                 />
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-xs text-[#1a1f24]/60 font-bold mt-1">
                   Tambahkan detail produk yang tidak terlihat di gambar
                 </p>
               </div>
@@ -407,15 +383,15 @@ export default function ProductDescriptionGenerator() {
           {/* Right Panel - Style Selection */}
           <div className="lg:col-span-2 space-y-6">
             {/* Title Section */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+            <div className="clay-card p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                <h2 className="text-xl font-bold text-[#1a1f24]">
                   2A. Style Judul
                 </h2>
                 <button
                   onClick={() => handleGenerate('title')}
                   disabled={loading !== null || !selectedImage}
-                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white text-sm font-semibold rounded-lg transition-colors disabled:cursor-not-allowed"
+                  className="px-4 py-2 clay-button text-sm font-semibold rounded-2xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading === 'title' ? "Generating..." : "Generate Judul"}
                 </button>
@@ -429,16 +405,15 @@ export default function ProductDescriptionGenerator() {
                       setSelectedTitleStyle(style.id);
                       setCustomTitlePrompt("");
                     }}
-                    className={`text-left p-3 rounded-lg border-2 transition-all ${
-                      selectedTitleStyle === style.id
-                        ? "border-purple-500 bg-purple-50 dark:bg-purple-900/30"
-                        : "border-gray-200 dark:border-gray-700 hover:border-purple-300"
-                    }`}
+                    className={`text-left p-3 rounded-lg border-2 transition-all ${selectedTitleStyle === style.id
+                      ? "border-purple-500 bg-purple-50 dark:bg-purple-900/30"
+                      : "border-gray-200 dark:border-gray-700 hover:border-purple-300"
+                      }`}
                   >
-                    <div className="font-semibold text-sm text-gray-900 dark:text-white mb-1">
+                    <div className="font-semibold text-sm text-[#1a1f24] mb-1">
                       {style.label}
                     </div>
-                    <div className="text-xs text-gray-600 dark:text-gray-400">
+                    <div className="text-xs text-[#1a1f24]/60 font-bold">
                       {style.description}
                     </div>
                   </button>
@@ -446,7 +421,7 @@ export default function ProductDescriptionGenerator() {
               </div>
 
               <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-bold text-[#1a1f24] mb-2">
                   Atau Custom Prompt Judul
                 </label>
                 <textarea
@@ -457,14 +432,14 @@ export default function ProductDescriptionGenerator() {
                   }}
                   placeholder="Contoh: Buatkan 3 variasi judul yang fokus pada keunggulan bahan..."
                   rows={2}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white resize-none"
+                  className="clay-input w-full px-4 py-3 text-sm custom-scrollbar resize-none"
                 />
               </div>
 
               {generatedTitle && (
                 <div className="mt-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 border-2 border-purple-200 dark:border-purple-700">
                   <div className="flex justify-between items-center mb-2">
-                    <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    <p className="text-sm font-bold text-[#1a1f24]">
                       Hasil Judul:
                     </p>
                     <button
@@ -482,20 +457,20 @@ export default function ProductDescriptionGenerator() {
             </div>
 
             {/* Description Section - Multi Layer */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+            <div className="clay-card p-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                  <h2 className="text-xl font-bold text-[#1a1f24]">
                     2B. Style Deskripsi
                   </h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  <p className="text-sm text-[#1a1f24]/70 font-bold mt-1">
                     Pilih kombinasi style (bisa lebih dari 1 layer)
                   </p>
                 </div>
                 <button
                   onClick={() => handleGenerate('description')}
                   disabled={loading !== null || !selectedImage}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white text-sm font-semibold rounded-lg transition-colors disabled:cursor-not-allowed"
+                  className="px-4 py-2 clay-button text-sm font-bold rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading === 'description' ? "Generating..." : "Generate Deskripsi"}
                 </button>
@@ -503,7 +478,7 @@ export default function ProductDescriptionGenerator() {
 
               {/* Platform Layer */}
               <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                <h3 className="text-sm font-bold text-[#1a1f24] mb-3">
                   Platform/Marketplace:
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -511,16 +486,15 @@ export default function ProductDescriptionGenerator() {
                     <button
                       key={style.id}
                       onClick={() => setSelectedPlatform(selectedPlatform === style.id ? null : style.id)}
-                      className={`text-left p-3 rounded-lg border-2 transition-all ${
-                        selectedPlatform === style.id
-                          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30"
-                          : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
-                      }`}
+                      className={`text-left p-3 rounded-lg border-2 transition-all ${selectedPlatform === style.id
+                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30"
+                        : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
+                        }`}
                     >
-                      <div className="font-semibold text-sm text-gray-900 dark:text-white mb-1">
+                      <div className="font-semibold text-sm text-[#1a1f24] mb-1">
                         {style.label}
                       </div>
-                      <div className="text-xs text-gray-600 dark:text-gray-400">
+                      <div className="text-xs text-[#1a1f24]/60 font-bold">
                         {style.description}
                       </div>
                     </button>
@@ -530,7 +504,7 @@ export default function ProductDescriptionGenerator() {
 
               {/* Language Layer */}
               <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                <h3 className="text-sm font-bold text-[#1a1f24] mb-3">
                   Bahasa:
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -538,16 +512,15 @@ export default function ProductDescriptionGenerator() {
                     <button
                       key={style.id}
                       onClick={() => setSelectedLanguage(selectedLanguage === style.id ? null : style.id)}
-                      className={`text-left p-3 rounded-lg border-2 transition-all ${
-                        selectedLanguage === style.id
-                          ? "border-green-500 bg-green-50 dark:bg-green-900/30"
-                          : "border-gray-200 dark:border-gray-700 hover:border-green-300"
-                      }`}
+                      className={`text-left p-3 rounded-lg border-2 transition-all ${selectedLanguage === style.id
+                        ? "border-green-500 bg-green-50 dark:bg-green-900/30"
+                        : "border-gray-200 dark:border-gray-700 hover:border-green-300"
+                        }`}
                     >
-                      <div className="font-semibold text-sm text-gray-900 dark:text-white mb-1">
+                      <div className="font-semibold text-sm text-[#1a1f24] mb-1">
                         {style.label}
                       </div>
-                      <div className="text-xs text-gray-600 dark:text-gray-400">
+                      <div className="text-xs text-[#1a1f24]/60 font-bold">
                         {style.description}
                       </div>
                     </button>
@@ -557,7 +530,7 @@ export default function ProductDescriptionGenerator() {
 
               {/* Writing Style Layer */}
               <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                <h3 className="text-sm font-bold text-[#1a1f24] mb-3">
                   Gaya Penulisan:
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -565,16 +538,15 @@ export default function ProductDescriptionGenerator() {
                     <button
                       key={style.id}
                       onClick={() => setSelectedWritingStyle(selectedWritingStyle === style.id ? null : style.id)}
-                      className={`text-left p-3 rounded-lg border-2 transition-all ${
-                        selectedWritingStyle === style.id
-                          ? "border-orange-500 bg-orange-50 dark:bg-orange-900/30"
-                          : "border-gray-200 dark:border-gray-700 hover:border-orange-300"
-                      }`}
+                      className={`text-left p-3 rounded-lg border-2 transition-all ${selectedWritingStyle === style.id
+                        ? "border-orange-500 bg-orange-50 dark:bg-orange-900/30"
+                        : "border-gray-200 dark:border-gray-700 hover:border-orange-300"
+                        }`}
                     >
-                      <div className="font-semibold text-sm text-gray-900 dark:text-white mb-1">
+                      <div className="font-semibold text-sm text-[#1a1f24] mb-1">
                         {style.label}
                       </div>
-                      <div className="text-xs text-gray-600 dark:text-gray-400">
+                      <div className="text-xs text-gray-700 font-medium">
                         {style.description}
                       </div>
                     </button>
@@ -609,7 +581,7 @@ export default function ProductDescriptionGenerator() {
               )}
 
               <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-bold text-[#1a1f24] mb-2">
                   Custom Prompt Tambahan (Opsional)
                 </label>
                 <textarea
@@ -617,14 +589,14 @@ export default function ProductDescriptionGenerator() {
                   onChange={(e) => setCustomDescPrompt(e.target.value)}
                   placeholder="Contoh: Tambahkan informasi garansi 1 tahun dan gratis ongkir..."
                   rows={2}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white resize-none"
+                  className="clay-input w-full px-4 py-3 text-sm custom-scrollbar resize-none"
                 />
               </div>
 
               {generatedDesc && (
                 <div className="mt-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 border-2 border-blue-200 dark:border-blue-700">
                   <div className="flex justify-between items-center mb-2">
-                    <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    <p className="text-sm font-bold text-[#1a1f24]">
                       Hasil Deskripsi:
                     </p>
                     <button
@@ -643,7 +615,7 @@ export default function ProductDescriptionGenerator() {
 
             {/* Error & Generate Both */}
             {error && (
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg">
+              <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm font-bold">
                 {error}
               </div>
             )}
@@ -651,7 +623,7 @@ export default function ProductDescriptionGenerator() {
             <button
               onClick={() => handleGenerate('both')}
               disabled={loading !== null || !selectedImage}
-              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-all disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="clay-button w-full py-4 px-6 flex items-center justify-center gap-2 transform active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading === 'both' ? (
                 <>

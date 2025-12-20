@@ -109,40 +109,43 @@ export default function PhotoEnhancerPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 p-6 md:p-12">
-            <div className="max-w-7xl mx-auto">
-                <Link href="/" className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-purple-600 mb-8 transition-colors">
-                    <ArrowLeftIcon className="w-5 h-5 mr-2" />
-                    Kembali ke Dashboard
-                </Link>
+        <div className="min-h-screen bg-[#E8ECEF]">
+            <div className="max-w-7xl mx-auto px-6 md:px-12 py-12">
 
                 <div className="flex flex-col lg:flex-row gap-8">
 
                     {/* LEFT PANEL - CONTROLS */}
                     <div className="w-full lg:w-1/3 space-y-6">
-                        <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-xl border border-gray-100 dark:border-gray-700">
+                        <div className="clay-card p-6">
                             <div className="flex items-center space-x-3 mb-6">
-                                <div className="p-2 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-lg text-white">
+                                <div className="p-2 rounded-xl text-white"
+                                    style={{
+                                        background: 'linear-gradient(135deg, #2ECC71 0%, #27ae60 100%)',
+                                        boxShadow: '3px 3px 6px rgba(46, 204, 113, 0.3), -2px -2px 4px rgba(255, 255, 255, 0.8)'
+                                    }}>
                                     <PhotoIcon className="w-6 h-6" />
                                 </div>
-                                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">AI Studio</h1>
+                                <h1 className="text-2xl font-bold text-[#1a1f24]">AI Studio</h1>
                             </div>
 
                             {/* UPLOAD BOX */}
                             <div
                                 onClick={() => fileInputRef.current?.click()}
                                 className={`relative w-full aspect-[4/3] rounded-2xl overflow-hidden cursor-pointer border-2 border-dashed transition-all group ${selectedImage
-                                        ? 'border-purple-500'
-                                        : 'border-gray-300 hover:border-purple-400 bg-gray-50 dark:bg-gray-700/50'
+                                    ? 'border-[#2ECC71] bg-[#2ECC71]/5'
+                                    : 'border-gray-300 hover:border-[#2ECC71] bg-white/50'
                                     }`}
+                                style={{
+                                    boxShadow: 'inset 2px 2px 4px rgba(46, 204, 113, 0.08)'
+                                }}
                             >
                                 <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageUpload} />
 
                                 {selectedImage ? (
                                     <>
                                         <Image src={selectedImage} alt="Input" fill className="object-cover" />
-                                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                            <span className="text-white font-medium flex items-center bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm">
+                                        <div className="absolute inset-0 bg-[#2ECC71]/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                                            <span className="text-white font-bold flex items-center bg-gray-800/70 px-5 py-2.5 rounded-full">
                                                 <ArrowPathIcon className="w-4 h-4 mr-2" /> Ganti Foto
                                             </span>
                                         </div>
@@ -158,31 +161,35 @@ export default function PhotoEnhancerPage() {
                             <div className="mt-6 space-y-6">
                                 {/* STYLE SELECTOR */}
                                 <div>
-                                    <label className="text-sm font-bold text-gray-900 dark:text-white mb-3 block">1. Gaya Visual</label>
+                                    <label className="text-sm font-bold text-[#1a1f24] mb-3 block">1. Gaya Visual</label>
                                     <div className="grid grid-cols-2 gap-2">
                                         {styles.map(s => (
                                             <button
                                                 key={s.id}
                                                 onClick={() => setSelectedStyle(s.id)}
-                                                className={`px-3 py-2 rounded-xl text-sm font-medium text-left transition-all flex items-center space-x-2 ${selectedStyle === s.id ? 'bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300' : 'bg-gray-50 text-gray-600 hover:bg-gray-100 dark:bg-gray-700/50 dark:text-gray-300'
+                                                className={`px-3 py-2 rounded-xl text-sm font-medium cursor-pointer text-left transition-all flex items-center space-x-2 ${selectedStyle === s.id
+                                                    ? 'clay-button text-white font-bold'
+                                                    : 'bg-white/70 text-gray-600 hover:bg-[#2ECC71]/10 border border-gray-200'
                                                     }`}
                                             >
                                                 <span>{s.icon}</span>
-                                                <span>{s.name}</span>
+                                                <span className="text-xs">{s.name}</span>
                                             </button>
                                         ))}
                                     </div>
                                 </div>
 
-                                {/* COMPOSITION SELECTOR (NEW) */}
+                                {/* COMPOSITION SELECTOR */}
                                 <div>
-                                    <label className="text-sm font-bold text-gray-900 dark:text-white mb-3 block">2. Komposisi & Elemen</label>
+                                    <label className="text-sm font-bold text-[#1a1f24] mb-3 block">2. Komposisi & Elemen</label>
                                     <div className="grid grid-cols-2 gap-2">
                                         {compositionOptions.map(c => (
                                             <button
                                                 key={c.id}
                                                 onClick={() => setSelectedComposition(c.id)}
-                                                className={`px-3 py-2 rounded-xl text-xs font-medium text-center transition-all border ${selectedComposition === c.id ? 'border-indigo-500 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300' : 'border-gray-200 text-gray-600 hover:border-gray-300 dark:border-gray-600 dark:text-gray-300'
+                                                className={`px-3 py-2 rounded-xl text-xs cursor-pointer font-medium text-center transition-all border ${selectedComposition === c.id
+                                                    ? 'border-[#2ECC71] bg-[#2ECC71]/10 text-[#2D3436] font-bold shadow-sm'
+                                                    : 'border-gray-200 text-gray-600 hover:border-[#2ECC71] bg-white/50'
                                                     }`}
                                             >
                                                 {c.name}
@@ -193,13 +200,15 @@ export default function PhotoEnhancerPage() {
 
                                 {/* LIGHTING SELECTOR */}
                                 <div>
-                                    <label className="text-sm font-bold text-gray-900 dark:text-white mb-3 block">3. Pencahayaan</label>
+                                    <label className="text-sm font-bold text-[#1a1f24] mb-3 block">3. Pencahayaan</label>
                                     <div className="flex flex-wrap gap-2">
                                         {lightingOptions.map(l => (
                                             <button
                                                 key={l.id}
                                                 onClick={() => setSelectedLighting(l.id)}
-                                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedLighting === l.id ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400'
+                                                className={`px-3 py-1.5 rounded-full text-xs cursor-pointer font-medium transition-all ${selectedLighting === l.id
+                                                    ? 'bg-[#2ECC71] text-white shadow-md'
+                                                    : 'bg-white/80 text-gray-600 hover:bg-[#2ECC71]/10 border border-gray-200'
                                                     }`}
                                             >
                                                 {l.name}
@@ -210,14 +219,14 @@ export default function PhotoEnhancerPage() {
 
                                 {/* DESCRIPTION */}
                                 <div>
-                                    <label className="text-sm font-bold text-gray-900 dark:text-white mb-2 block">
+                                    <label className="text-sm font-bold text-[#1a1f24] mb-2 block">
                                         Deskripsi Tambahan (Opsional)
                                     </label>
                                     <textarea
                                         value={description}
                                         onChange={(e) => setDescription(e.target.value)}
                                         placeholder="Contoh: Tambahkan hiasan bunga mawar merah di sampingnya..."
-                                        className="w-full text-sm p-3 rounded-xl border-gray-200 bg-gray-50 focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700/50 dark:border-gray-600 dark:text-white resize-none h-20"
+                                        className="clay-input w-full text-sm p-3 resize-none h-20"
                                     />
                                 </div>
 
@@ -225,14 +234,14 @@ export default function PhotoEnhancerPage() {
                                 <button
                                     onClick={handleGenerate}
                                     disabled={isGenerating || !selectedImage}
-                                    className={`w-full py-4 rounded-xl font-bold text-white shadow-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] ${isGenerating || !selectedImage
-                                            ? 'bg-gray-400 cursor-not-allowed'
-                                            : 'bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600'
+                                    className={`clay-button w-full py-4 rounded-2xl font-bold transition-all transform ${isGenerating || !selectedImage
+                                        ? 'opacity-50 cursor-not-allowed'
+                                        : 'hover:scale-[1.02] active:scale-[0.98]'
                                         }`}
                                 >
                                     {isGenerating ? (
                                         <span className="flex items-center justify-center">
-                                            <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <svg className="animate-spin -ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                             </svg>
@@ -250,25 +259,32 @@ export default function PhotoEnhancerPage() {
                     </div>
 
                     {/* RIGHT PANEL - RESULT */}
-                    <div className="flex-1 min-h-[500px] bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-xl border border-gray-100 dark:border-gray-700 flex flex-col">
-                        <div className="flex-1 flex flex-col items-center justify-center relative rounded-2xl overflow-hidden bg-gray-50 dark:bg-gray-900/50 border-2 border-dashed border-gray-100 dark:border-gray-700">
+                    <div className="flex-1 min-h-[500px] clay-card p-6 flex flex-col">
+                        <div className="flex-1 flex flex-col items-center justify-center relative rounded-2xl overflow-hidden bg-white/40 border-2 border-dashed border-gray-200"
+                            style={{
+                                boxShadow: 'inset 3px 3px 6px rgba(45, 52, 54, 0.05)'
+                            }}>
                             {resultImage ? (
                                 <div className="relative w-full h-full min-h-[500px]">
                                     <Image
                                         src={resultImage}
                                         alt="Result"
                                         fill
-                                        className="object-contain" // Changed to contain to ensure full image is seen
+                                        className="object-contain"
                                         unoptimized
                                     />
                                 </div>
                             ) : (
                                 <div className="text-center p-8 max-w-sm">
-                                    <div className="w-20 h-20 bg-gradient-to-tr from-purple-100 to-indigo-100 dark:from-gray-700 dark:to-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
-                                        <SparklesIcon className="w-10 h-10 text-purple-500 dark:text-purple-300" />
+                                    <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
+                                        style={{
+                                            background: 'linear-gradient(135deg, #2ECC71 0%, #27ae60 100%)',
+                                            boxShadow: '4px 4px 10px rgba(46, 204, 113, 0.3), -2px -2px 6px rgba(255, 255, 255, 0.8)'
+                                        }}>
+                                        <SparklesIcon className="w-10 h-10 text-white" />
                                     </div>
-                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Belum ada hasil</h3>
-                                    <p className="text-gray-500 dark:text-gray-400">Pilih foto, atur gaya, dan tekan tombol Generate untuk melihat keajaiban AI.</p>
+                                    <h3 className="text-xl font-bold text-[#1a1f24] mb-2">Belum ada hasil</h3>
+                                    <p className="text-gray-700 font-medium">Pilih foto, atur gaya, dan tekan tombol Generate untuk melihat keajaiban AI.</p>
                                 </div>
                             )}
                         </div>
@@ -279,13 +295,13 @@ export default function PhotoEnhancerPage() {
                                 <a
                                     href={resultImage}
                                     download="umkm-ai-enhanced.png"
-                                    className="flex-1 py-3 px-6 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-xl flex items-center justify-center hover:opacity-90 transition-opacity shadow-lg"
+                                    className="clay-button flex-1 py-3 px-6 font-bold rounded-2xl flex items-center justify-center"
                                 >
                                     <ArrowDownTrayIcon className="w-5 h-5 mr-2" /> Download HD
                                 </a>
                                 <button
                                     onClick={() => setResultImage(null)}
-                                    className="px-6 py-3 border border-gray-200 dark:border-gray-600 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                    className="px-6 py-3 border-2 border-gray-200 bg-white/70 font-medium rounded-2xl hover:bg-[#2ECC71]/10 transition-colors"
                                 >
                                     Reset
                                 </button>
@@ -295,6 +311,6 @@ export default function PhotoEnhancerPage() {
 
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

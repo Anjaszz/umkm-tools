@@ -180,50 +180,27 @@ Instruksi:
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-pink-50 to-orange-50 dark:from-gray-900 dark:to-gray-800">
+        <div className="min-h-screen bg-[#E8ECEF]">
             {showCopyNotif && (
-                <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
+                <div className="fixed top-24 right-4 z-50 bg-[#2ECC71] text-white px-6 py-3 rounded-2xl shadow-xl font-bold flex items-center gap-2 animate-bounce-short">
                     Caption berhasil dicopy!
                 </div>
             )}
 
-            {/* Header */}
-            <div className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    <Link
-                        href="/"
-                        className="inline-flex items-center text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 mb-4 transition-colors"
-                    >
-                        <ArrowLeftIcon className="w-5 h-5 mr-2" />
-                        Kembali ke Dashboard
-                    </Link>
-                    <div className="flex items-center gap-3">
-                        <MegaphoneIcon className="w-10 h-10 text-pink-600 dark:text-pink-400" />
-                        <div>
-                            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-                                Generator Caption Sosmed
-                            </h1>
-                            <p className="mt-2 text-gray-600 dark:text-gray-300">
-                                Buat caption viral untuk Instagram, TikTok, Facebook dengan mudah
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             {/* Main Content */}
             <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Left Panel - Input */}
                     <div className="lg:col-span-1">
-                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sticky top-6">
-                            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                        <div className="clay-card p-6 sticky top-6">
+                            <h2 className="text-xl font-bold text-[#1a1f24] mb-4">
                                 1. Info Produk & Toko
                             </h2>
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    <label className="block text-sm font-bold text-[#1a1f24] mb-1">
                                         Nama Toko <span className="text-red-500">*</span>
                                     </label>
                                     <input
@@ -231,12 +208,12 @@ Instruksi:
                                         value={storeName}
                                         onChange={(e) => setStoreName(e.target.value)}
                                         placeholder="Contoh: Toko Berkah Jaya"
-                                        className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                                        className="clay-input w-full px-4 py-3 text-sm"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    <label className="block text-sm font-bold text-[#1a1f24] mb-1">
                                         Produk / Deskripsi Singkat <span className="text-red-500">*</span>
                                     </label>
                                     <textarea
@@ -244,12 +221,12 @@ Instruksi:
                                         onChange={(e) => setProductName(e.target.value)}
                                         placeholder="Contoh: Hijab voal premium, anti geser, adem..."
                                         rows={3}
-                                        className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent dark:bg-gray-700 dark:text-white resize-none"
+                                        className="clay-input w-full px-4 py-3 text-sm custom-scrollbar resize-none"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    <label className="block text-sm font-bold text-[#1a1f24] mb-1">
                                         Info Tambahan (Opsional)
                                     </label>
                                     <input
@@ -257,19 +234,19 @@ Instruksi:
                                         value={additionalInfo}
                                         onChange={(e) => setAdditionalInfo(e.target.value)}
                                         placeholder="Contoh: Diskon 50% hari ini"
-                                        className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                                        className="clay-input w-full px-4 py-3 text-sm"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    <label className="block text-sm font-bold text-[#1a1f24] mb-2">
                                         Upload Foto (Opsional)
                                     </label>
                                     {!selectedImage ? (
                                         <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                <PhotoIcon className="w-8 h-8 text-gray-400 mb-2" />
-                                                <p className="text-xs text-gray-500 dark:text-gray-400">Klik untuk upload foto</p>
+                                                <PhotoIcon className="w-8 h-8 text-[#2ECC71] mb-2 opacity-80" />
+                                                <p className="text-xs text-[#1a1f24] font-bold">Klik untuk upload foto</p>
                                             </div>
                                             <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
                                         </label>
@@ -298,14 +275,14 @@ Instruksi:
 
                     {/* Right Panel - Options */}
                     <div className="lg:col-span-2 space-y-6">
-                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-                            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                        <div className="clay-card p-6">
+                            <h2 className="text-xl font-bold text-[#1a1f24] mb-4">
                                 2. Target Platform & Gaya
                             </h2>
 
                             {/* Platform Selection */}
                             <div className="mb-6">
-                                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                                <h3 className="text-sm font-bold text-[#1a1f24] mb-3">
                                     Mau posting dimana?
                                 </h3>
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -313,13 +290,13 @@ Instruksi:
                                         <button
                                             key={p.id}
                                             onClick={() => setSelectedPlatform(p.id)}
-                                            className={`p-3 rounded-lg border-2 text-left transition-all ${selectedPlatform === p.id
+                                            className={`p-3 rounded-lg cursor-pointer border-2 text-left transition-all ${selectedPlatform === p.id
                                                 ? 'border-pink-500 bg-pink-50 dark:bg-pink-900/20'
                                                 : 'border-gray-200 dark:border-gray-700 hover:border-pink-300'
                                                 }`}
                                         >
-                                            <div className="font-bold text-gray-900 dark:text-white text-sm">{p.label}</div>
-                                            <div className="text-xs text-gray-500 dark:text-gray-400">{p.description}</div>
+                                            <div className="font-bold text-[#1a1f24] text-sm">{p.label}</div>
+                                            <div className="text-xs text-gray-700 font-medium">{p.description}</div>
                                         </button>
                                     ))}
                                 </div>
@@ -327,7 +304,7 @@ Instruksi:
 
                             {/* Tone Selection */}
                             <div className="mb-6">
-                                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                                <h3 className="text-sm font-bold text-[#1a1f24] mb-3">
                                     Gaya bicaranya gimana?
                                 </h3>
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -335,13 +312,13 @@ Instruksi:
                                         <button
                                             key={t.id}
                                             onClick={() => setSelectedTone(t.id)}
-                                            className={`p-3 rounded-lg border-2 text-left transition-all ${selectedTone === t.id
+                                            className={`p-3 rounded-lg cursor-pointer border-2 text-left transition-all ${selectedTone === t.id
                                                 ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20'
                                                 : 'border-gray-200 dark:border-gray-700 hover:border-orange-300'
                                                 }`}
                                         >
-                                            <div className="font-bold text-gray-900 dark:text-white text-sm">{t.label}</div>
-                                            <div className="text-xs text-gray-500 dark:text-gray-400">{t.description}</div>
+                                            <div className="font-bold text-[#1a1f24] text-sm">{t.label}</div>
+                                            <div className="text-xs text-gray-700 font-medium">{t.description}</div>
                                         </button>
                                     ))}
                                 </div>
@@ -351,7 +328,7 @@ Instruksi:
                             <button
                                 onClick={handleGenerate}
                                 disabled={loading || !productName || !storeName || !selectedPlatform || !selectedTone}
-                                className="w-full bg-gradient-to-r from-pink-600 to-orange-500 hover:from-pink-700 hover:to-orange-600 disabled:from-gray-400 disabled:to-gray-400 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform active:scale-95 transition-all disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                className="clay-button w-full py-3 px-6 rounded-2xl shadow-lg transform active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
                                 {loading ? (
                                     <>
@@ -371,8 +348,8 @@ Instruksi:
 
                             {/* Error Message */}
                             {error && (
-                                <div className="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                                    <span className="block sm:inline">{error}</span>
+                                <div className="mt-4 bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm font-bold">
+                                    {error}
                                 </div>
                             )}
 
@@ -380,15 +357,15 @@ Instruksi:
                             {generatedCaption && (
                                 <div className="mt-8 animate-fade-in">
                                     <div className="flex justify-between items-center mb-2">
-                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Caption Siap Posting:</h3>
+                                        <h3 className="text-lg font-bold text-[#1a1f24]">Caption Siap Posting:</h3>
                                         <button
                                             onClick={() => copyToClipboard(generatedCaption)}
-                                            className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white text-xs font-bold py-1 px-3 rounded inline-flex items-center"
+                                            className="text-xs bg-white hover:bg-gray-50 text-[#1a1f24] px-4 py-2 rounded-xl flex items-center gap-2 transition-all font-bold border-2 border-pink-500/20 shadow-sm"
                                         >
                                             Copy Caption
                                         </button>
                                     </div>
-                                    <div className="bg-gray-50 dark:bg-gray-900 border-2 border-pink-100 dark:border-pink-900 rounded-xl p-4 whitespace-pre-wrap text-gray-800 dark:text-gray-200 text-sm leading-relaxed">
+                                    <div className="bg-white/50 backdrop-blur-sm border-2 border-dashed border-pink-200 rounded-2xl p-4 whitespace-pre-wrap text-[#1a1f24] font-medium text-sm leading-relaxed">
                                         {generatedCaption}
                                     </div>
                                 </div>

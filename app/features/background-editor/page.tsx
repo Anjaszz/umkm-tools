@@ -97,46 +97,22 @@ export default function BackgroundRemover() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 dark:from-gray-900 dark:to-gray-800">
-            {/* Header */}
-            <div className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    <Link
-                        href="/"
-                        className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-4 transition-colors"
-                    >
-                        <ArrowLeftIcon className="w-5 h-5 mr-2" />
-                        Kembali ke Dashboard
-                    </Link>
-                    <div className="flex items-center gap-3">
-                        <SwatchIcon className="w-10 h-10 text-blue-600 dark:text-blue-400" />
-                        <div>
-                            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-                                Background Remover
-                            </h1>
-                            <p className="mt-2 text-gray-600 dark:text-gray-300">
-                                Hapus background foto produk secara otomatis dalam hitungan detik
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <div className="min-h-screen bg-[#E8ECEF]">
+            <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
                     {/* Upload Section */}
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                    <div className="clay-card p-6">
+                        <h2 className="text-xl font-bold text-[#1a1f24] mb-4">
                             1. Upload Foto
                         </h2>
 
                         {!selectedImage ? (
                             <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <PhotoIcon className="w-12 h-12 text-gray-400 mb-3" />
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Klik untuk upload foto produk</p>
-                                    <p className="text-xs text-gray-400 mt-1">PNG, JPG (Max. 5MB)</p>
+                                    <PhotoIcon className="w-12 h-12 text-[#2ECC71] mb-3 opacity-80" />
+                                    <p className="text-sm text-[#1a1f24] font-bold">Klik untuk upload foto produk</p>
+                                    <p className="text-xs text-[#1a1f24]/60 mt-1 font-medium">PNG, JPG (Max. 5MB)</p>
                                 </div>
                                 <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
                             </label>
@@ -162,7 +138,7 @@ export default function BackgroundRemover() {
                                             onChange={() => setQuality("preview")}
                                             className="text-blue-600 focus:ring-blue-500"
                                         />
-                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        <span className="text-sm font-bold text-[#1a1f24]">
                                             Normal (Gratis)
                                         </span>
                                     </label>
@@ -174,21 +150,21 @@ export default function BackgroundRemover() {
                                             onChange={() => setQuality("full")}
                                             className="text-blue-600 focus:ring-blue-500"
                                         />
-                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        <span className="text-sm font-bold text-[#1a1f24]">
                                             HD / Full Res (1 Credit)
                                         </span>
                                     </label>
                                 </div>
 
                                 <div className="flex gap-2">
-                                    <label className="flex-1 btn bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg text-center cursor-pointer transition-colors">
+                                    <label className="flex-1 bg-white hover:bg-gray-50 text-[#1a1f24] font-bold py-2 px-4 rounded-xl text-center cursor-pointer transition-all border-2 border-[#2ECC71]/20 shadow-sm">
                                         Ganti Foto
                                         <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
                                     </label>
                                     <button
                                         onClick={handleRemoveBackground}
                                         disabled={loading || !!processedImage}
-                                        className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                                        className="flex-1 clay-button py-2 px-4 rounded-2xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {loading ? (
                                             <>
@@ -204,7 +180,7 @@ export default function BackgroundRemover() {
                                     </button>
                                 </div>
                                 {error && (
-                                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-sm">
+                                    <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm font-bold">
                                         {error}
                                     </div>
                                 )}
@@ -213,8 +189,8 @@ export default function BackgroundRemover() {
                     </div>
 
                     {/* Result Section */}
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                    <div className="clay-card p-6">
+                        <h2 className="text-xl font-bold text-[#1a1f24] mb-4">
                             2. Hasil
                         </h2>
 
@@ -241,7 +217,7 @@ export default function BackgroundRemover() {
 
                                 {/* Editor Controls */}
                                 <div>
-                                    <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Ganti Background</h3>
+                                    <h3 className="text-sm font-bold text-[#1a1f24] mb-3">Ganti Background</h3>
                                     <div className="flex flex-wrap gap-2">
                                         <button
                                             onClick={() => setBgColor('transparent')}
@@ -271,7 +247,7 @@ export default function BackgroundRemover() {
 
                                 <button
                                     onClick={downloadImage}
-                                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform active:scale-95 transition-all flex items-center justify-center gap-2"
+                                    className="clay-button w-full py-4 px-6 flex items-center justify-center gap-2 transform active:scale-95 transition-all"
                                 >
                                     <ArrowDownTrayIcon className="w-5 h-5" />
                                     Download Hasil
@@ -280,9 +256,9 @@ export default function BackgroundRemover() {
 
                             </div>
                         ) : (
-                            <div className="h-64 flex flex-col items-center justify-center text-gray-400 bg-gray-50 dark:bg-gray-700/50 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-600">
-                                <PhotoIcon className="w-12 h-12 mb-2 opacity-50" />
-                                <p className="text-sm">Hasil akan muncul di sini</p>
+                            <div className="h-64 flex flex-col items-center justify-center text-[#1a1f24]/40 bg-white/30 rounded-2xl border-2 border-dashed border-[#2ECC71]/30">
+                                <PhotoIcon className="w-12 h-12 mb-2 opacity-30 text-[#2ECC71]" />
+                                <p className="text-sm font-bold">Hasil akan muncul di sini</p>
                             </div>
                         )}
                     </div>
