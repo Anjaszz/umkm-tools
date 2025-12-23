@@ -101,8 +101,8 @@ export default function Footer() {
 
                 <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-center gap-4 text-gray-500 text-sm">
                     <p className="font-bold text-center">
-                        © 2025 UMKM Tools. Created with <span className="text-red-500 animate-pulse">❤️</span> by <span className="text-white">Anjaszz</span>
-                    </p>
+                        © 2025 UMKM Tools. Created by <a href="https://anjasrani.my.id/" target="_blank" className="text-white">Anjaszz</a>
+                    </p>    
                 </div>
             </div>
         </footer>
