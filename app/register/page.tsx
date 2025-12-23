@@ -11,13 +11,16 @@ import {
     ArrowRightIcon,
     ShoppingBagIcon,
     CheckBadgeIcon,
-    ExclamationCircleIcon
+    ExclamationCircleIcon,
+    EyeIcon,
+    EyeSlashIcon
 } from "@heroicons/react/24/outline";
 
 export default function RegisterPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [fullName, setFullName] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
@@ -29,7 +32,7 @@ export default function RegisterPage() {
         setLoading(true);
         setError(null);
 
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
             email,
             password,
             options: {
@@ -41,7 +44,23 @@ export default function RegisterPage() {
         });
 
         if (error) {
-            setError(error.message);
+            // Map common Supabase errors to Indonesian
+            let indonesianError = error.message;
+            if (error.message.includes("User already registered")) {
+                indonesianError = "Email ini sudah terdaftar. Silakan gunakan email lain atau masuk ke akun Anda.";
+            } else if (error.message.includes("Password is too short")) {
+                indonesianError = "Kata sandi terlalu pendek. Minimal harus 6 karakter.";
+            } else if (error.message.includes("rate limit")) {
+                indonesianError = "Terlalu banyak permintaan pendaftaran. Harap tunggu beberapa saat.";
+            } else {
+                indonesianError = "Terjadi kesalahan saat mendaftar. Harap coba lagi.";
+            }
+
+            setError(indonesianError);
+            setLoading(false);
+        } else if (data.user && data.user.identities && data.user.identities.length === 0) {
+            // If identities is empty, it means the user already exists (Supabase security feature)
+            setError("Email ini sudah terdaftar. Silakan gunakan email lain atau masuk ke akun Anda.");
             setLoading(false);
         } else {
             setSuccess(true);
@@ -137,13 +156,24 @@ export default function RegisterPage() {
                             <div className="relative group">
                                 <LockClosedIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-[#2ECC71] transition-colors" />
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="clay-input w-full pl-12 pr-4 py-4 rounded-2xl text-sm font-medium"
+                                    className="clay-input w-full pl-12 pr-12 py-4 rounded-2xl text-sm font-medium"
                                     placeholder="Minimal 6 karakter"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#2ECC71] transition-colors focus:outline-none"
+                                >
+                                    {showPassword ? (
+                                        <EyeSlashIcon className="w-5 h-5" />
+                                    ) : (
+                                        <EyeIcon className="w-5 h-5" />
+                                    )}
+                                </button>
                             </div>
                         </div>
 

@@ -7,7 +7,8 @@ import {
     ChatBubbleLeftRightIcon,
     MegaphoneIcon,
     TagIcon,
-    SwatchIcon
+    SwatchIcon,
+    ArrowsPointingOutIcon
 } from "@heroicons/react/24/outline";
 
 interface Feature {
@@ -36,7 +37,6 @@ const features: Feature[] = [
         href: "/features/social-caption",
         category: "Konten & Branding",
         status: "available"
-
     },
 
     {
@@ -62,6 +62,22 @@ const features: Feature[] = [
         description: "Ubah foto produk biasa menjadi foto studio profesional dengan teknologi AI Generatif",
         icon: PhotoIcon,
         href: "/features/photo-enhancer",
+        category: "Visual & Media",
+        status: "available"
+    },
+    {
+        title: "Generator Logo Instan",
+        description: "Buat logo profesional untuk brand UMKM Anda dalam hitungan detik",
+        icon: SwatchIcon,
+        href: "/features/logo-generator",
+        category: "Visual & Media",
+        status: "available"
+    },
+    {
+        title: "Smart Mockup Creator",
+        description: "Tempelkan logo/desain Anda ke produk fisik (kaos, botol, dll) secara realistis dengan AI",
+        icon: ArrowsPointingOutIcon,
+        href: "/features/smart-mockup",
         category: "Visual & Media",
         status: "available"
     },
