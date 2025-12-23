@@ -12,38 +12,132 @@ export default function PhotoEnhancerPage() {
     const [description, setDescription] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);
     const [resultImage, setResultImage] = useState<string | null>(null);
+    const [errorModal, setErrorModal] = useState<{ show: boolean; title: string; message: string }>({
+        show: false,
+        title: "",
+        message: ""
+    });
 
     // Sub-options state
-    const [selectedStyle, setSelectedStyle] = useState("studio");
-    const [selectedLighting, setSelectedLighting] = useState("soft");
-    const [selectedComposition, setSelectedComposition] = useState("focus");
+    const [selectedCategory, setSelectedCategory] = useState("Makanan & Minuman");
+    const [selectedStyle, setSelectedStyle] = useState("rustic_cafe");
+    const [selectedLighting, setSelectedLighting] = useState<string | null>(null);
+    const [selectedComposition, setSelectedComposition] = useState<string | null>(null);
+    const [selectedModel, setSelectedModel] = useState<string | null>(null);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Configuration Options
-    const styles = [
-        { id: "studio", name: "Studio Minimalis", icon: "✨", prompt: "clean minimalist studio photography, solid background, distraction free, high end e-commerce look" },
-        { id: "luxury", name: "Mewah (Luxury)", icon: "💎", prompt: "luxury product photography, black marble texture, gold accents, premium atmosphere, expensive look" },
-        { id: "nature", name: "Natural Organic", icon: "🌿", prompt: "product photography in nature, wooden elements, green leaves, sunlight dappled, organic and fresh" },
-        { id: "pop", name: "Pop & Ceria", icon: "🎨", prompt: "pop art style, vibrant pastel colors background, fun and energetic, trendy aesthetic" },
-        { id: "industrial", name: "Industrial", icon: "🏢", prompt: "industrial design style, concrete texture background, metallic details, raw and edgy" },
-        { id: "futuristic", name: "Futuristik", icon: "🚀", prompt: "futuristic cyberpunk style, neon lights, glowing edges, tech atmosphere" }
+    const styleCategories = [
+        {
+            name: "E-Commerce & Marketplace",
+            styles: [
+                { id: "clean_white", name: "Putih Bersih (Pro)", icon: "⚪", prompt: "high-end e-commerce product photography, pure white background, soft professional studio lighting, delicate drop shadows, extremely clean and sharp" },
+                { id: "soft_pastel", name: "Estetik Pastel", icon: "🎨", prompt: "modern boutique style, solid soft pastel background, minimalist aesthetic, trending on social media, clean layout" },
+                { id: "geometric_podium", name: "Podium Minimalis", icon: "🕋", prompt: "product placed on a simple geometric podium, clean studio environment, architectural shadows, premium brand feel" },
+                { id: "marketplace_standard", name: "Standar Katalog", icon: "📦", prompt: "professional marketplace catalog photo, neutral light grey background, clear details, even lighting, ready for online shop" }
+            ],
+            modelOptions: [
+                { id: "held_pro", name: "Dipegang (Pro)", prompt: "product held by professional hands, clear visibility, commercial hand modeling" },
+                { id: "ecommerce_lifestyle", name: "Lifestyle Katalog", prompt: "clean lifestyle setting, product in natural but well-lit environment, high trust factor" }
+            ]
+        },
+        {
+            name: "Makanan & Minuman",
+            styles: [
+                { id: "rustic_cafe", name: "Rustic Cafe", icon: "☕", prompt: "rustic aesthetic cafe setting, wooden table, warm ambient lighting, cozy atmosphere, highly detailed food textures" },
+                { id: "fine_dining", name: "Fine Dining", icon: "🍽️", prompt: "modern fine dining plating, dark slate background, focused spotlight, elegant and expensive look" },
+                { id: "fresh_splash", name: "Fresh & Splash", icon: "💦", prompt: "dynamic water splash, condensation, macro photography, vibrant fresh colors, commercial food look" },
+                { id: "street_food", name: "Street Food", icon: "🥢", prompt: "vibrant night market atmosphere, blurred city lights background, energetic and authentic street food vibe" },
+                { id: "kitchen_modern", name: "Dapur Modern", icon: "🍳", prompt: "clean minimalist kitchen counter, professional culinary environment, bright natural house lighting" },
+                { id: "picnic", name: "Piknik Santai", icon: "🧺", prompt: "outdoor picnic setting, green grass, checkered cloth, bright sunny day, relaxed atmosphere" }
+            ],
+            modelOptions: [
+                { id: "food_held", name: "Dipegang Tangan", prompt: "product being held by human hands, interaction with product, close-up" },
+                { id: "food_eaten", name: "Sedang Dinikmati", prompt: "a person enjoying the food/drink, taking a bite or sip, candid lifestyle expression" }
+            ]
+        },
+        {
+            name: "Fashion & Aksesoris",
+            styles: [
+                { id: "boutique", name: "Boutique Minimalis", icon: "👗", prompt: "minimalist high-end boutique interior, clean white background, soft shadows, airy and bright" },
+                { id: "urban_street", name: "Urban Street", icon: "👟", prompt: "urban street photography, blurred city background, natural daylight, trendy lifestyle vibe" },
+                { id: "studio_pro", name: "Studio Pro", icon: "📸", prompt: "professional high-fashion studio setup, neutral grey background, crisp shadows, sharp details" },
+                { id: "vintage", name: "Retro / Vintage", icon: "🎞️", prompt: "1970s film aesthetic, muted warm tones, subtle grain, nostalgic boutique feel" },
+                { id: "luxury_runway", name: "Runway Mewah", icon: "💎", prompt: "high-fashion runway stage, dramatic spotlights, audience bokeh, expensive couture atmosphere" },
+                { id: "boho_chic", name: "Boho Chic", icon: "🌾", prompt: "bohemian style, sun-drenched natural textures, soft earth tones, organic fashion vibe" }
+            ],
+            modelOptions: [
+                { id: "fashion_worn", name: "Dipakai Model", prompt: "product being worn by a professional fashion model, realistic fabric draping, stylish posing" },
+                { id: "fashion_walk", name: "Model Berjalan", prompt: "model walking while wearing the product, motion blur in background, dynamic fashion shot" }
+            ]
+        },
+        {
+            name: "Kecantikan & Skincare",
+            styles: [
+                { id: "zen_organic", name: "Organic Zen", icon: "🌿", prompt: "spa-like atmosphere, organic textures like stone and wood, palm leaf shadows, serene and natural" },
+                { id: "luxury_marble", name: "Luxury Marble", icon: "💎", prompt: "luxury skincare aesthetic, white marble background, rose gold accents, soft glowing light" },
+                { id: "clean_science", name: "Clean Science", icon: "🧪", prompt: "modern laboratory aesthetic, clean glass surfaces, blue and white clinical lighting, fresh and sterile" },
+                { id: "summer_glow", name: "Summer Glow", icon: "☀️", prompt: "tropical beach / poolside setting, bright golden hour sunlight, refreshing summer skincare vibe" },
+                { id: "evening_glam", name: "Evening Glam", icon: "✨", prompt: "glamorous night atmosphere, bokeh of city lights, sparkling gold accents, dark and rich mood" }
+            ],
+            modelOptions: [
+                { id: "skin_apply", name: "Sedang Dipakai", prompt: "product being applied to glowing human skin or face, close-up of hands and skin texture" },
+                { id: "skin_held", name: "Dipegang Model", prompt: "model holding the product near their face, smiling, healthy skin look, soft focus" }
+            ]
+        },
+        {
+            name: "Elektronik & Gadget",
+            styles: [
+                { id: "cyber_tech", name: "Cyberpunk Tech", icon: "⚡", prompt: "futuristic tech vibe, dark environment with neon cyan and magenta accents, holographic elements" },
+                { id: "workspace", name: "Modern Workspace", icon: "💻", prompt: "clean ergonomic desk setup, plant in background, soft morning sunlight, professional tech lifestyle" },
+                { id: "gaming", name: "Gaming Setup", icon: "🎮", prompt: "immersive gaming room, RGB LED strip lighting, dark moody atmosphere, high-tech aesthetic" },
+                { id: "outdoor_rugged", name: "Outdoor Rugged", icon: "🧗", prompt: "rugged mountain or forest environment, tough durable presentation, natural adventure lighting" }
+            ],
+            modelOptions: [
+                { id: "tech_use", name: "Sedang Digunakan", prompt: "hands interacting with the device, product in professional use, realistic workspace environment" },
+                { id: "tech_held", name: "Dipegang Tangan", prompt: "close up shot of hands holding the gadget, showcasing design and texture" }
+            ]
+        },
+        {
+            name: "Rumah & Dekorasi",
+            styles: [
+                { id: "scandinavian", name: "Scandinavian", icon: "🪑", prompt: "white bright scandinavian interior, light wood furniture, minimalist and airy, hygge atmosphere" },
+                { id: "classic_royal", name: "Classic Royal", icon: "👑", prompt: "luxurious classic interior, velvet textures, gold ornate frames, warm grand atmosphere" },
+                { id: "bohemian_home", name: "Bohemian Living", icon: "🪴", prompt: "cozy bohemian living room, many indoor plants, macrame art, warm and earthy textures" },
+                { id: "industrial_loft", name: "Industrial Loft", icon: "🧱", prompt: "exposed brick walls, large windows, metallic accents, raw and modern interior" }
+            ],
+            modelOptions: [
+                { id: "home_relax", name: "Santai di Rumah", prompt: "person relaxing near the product, feeling comfortable and at home, soft lifestyle look" },
+                { id: "home_rearrange", name: "Menata Barang", prompt: "hands arranging or touching the product, showing scale and placement in a home" }
+            ]
+        },
+        {
+            name: "Otomotif & Hobi",
+            styles: [
+                { id: "night_drive", name: "Night Drive", icon: "🌃", prompt: "cinematic city night drive, long exposure light trails, neon reflections, high octane atmosphere" },
+                { id: "showroom", name: "Premium Showroom", icon: "🏎️", prompt: "ultra-clean car showroom, professional spotlights, perfect reflections, high-end commercial look" },
+                { id: "adventure_offroad", name: "Adventure Offroad", icon: "🏜️", prompt: "dusty offroad trail, sunset lighting, dynamic action feel, rugged and powerful" }
+            ],
+            modelOptions: [
+                { id: "hobby_use", name: "Sedang Hobi", prompt: "person actively using the hobby item, focus on passion and action, dynamic pose" },
+                { id: "hobby_pride", name: "Bangga Memegang", prompt: "person posing proudly with the product, looking at camera, emotional connection" }
+            ]
+        }
     ];
 
     const lightingOptions = [
-        { id: "soft", name: "Soft Studio", prompt: "soft diffused studio lighting, even illumination, no harsh shadows" },
-        { id: "golden", name: "Golden Hour", prompt: "warm golden hour sunlight, sun rays, cinematic lighting, emotional warmth" },
-        { id: "dramatic", name: "Dramatis", prompt: "dramatic chiaroscuro lighting, high contrast, moody shadows, rim lighting" },
-        { id: "neon", name: "Neon Glow", prompt: "colorful neon gel lighting, pink and blue hues, artistic club vibe" }
+        { id: "soft_sun", name: "Soft Sunlight", prompt: "natural morning sunlight through a window, soft shadows, warm and inviting" },
+        { id: "moody", name: "Moody Cinematic", prompt: "cinematic film lighting, high contrast, deep shadows, dramatic atmosphere" },
+        { id: "strobe", name: "Studio Strobe", prompt: "professional studio strobe lighting, perfectly even exposure, crisp and commercial" },
+        { id: "neon_accent", name: "Neon Accent", prompt: "dramatic neon rim lighting, dual-tone colors, artistic and edgy" }
     ];
 
     const compositionOptions = [
-        { id: "focus", name: "Fokus Produk", prompt: "centered close-up shot, shallow depth of field, bokeh background, product is the hero" },
-        { id: "hand", name: "Dipegang Model", prompt: "product being held by a hand of a professional model with manicured nails, lifestyle context, realistic skin tones" },
-        { id: "podium", name: "Di Atas Podium", prompt: "product sitting on a geometric podium, 3d render style stage, floating elements" },
-        { id: "splash", name: "Splash / Air", prompt: "dynamic water splash around product, freshness, droplets, high speed photography" },
-        { id: "flatlay", name: "Flatlay (Atas)", prompt: "knolling photography, top down view, organized layout, neat arrangement" },
-        { id: "marketing", name: "Poster Iklan", prompt: "wide composition suitable for advertising banner, negative space for text, commercial layout" }
+        { id: "hero", name: "Product Hero", prompt: "centered hero shot, macro detail, soft bokeh background, extremely sharp focus on main product" },
+        { id: "life", name: "Lifestyle Context", prompt: "natural lifestyle setting, product in use, realistic environment, warm and relatable" },
+        { id: "flatlay", name: "Flatlay Art", prompt: "artistically arranged flatlay from top view, organized knolling style, aesthetic supporting elements" },
+        { id: "float", name: "Floating Exhibit", prompt: "surreal floating composition, gravity-defying, clean background, 3D artistic presentation" }
     ];
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,13 +163,25 @@ export default function PhotoEnhancerPage() {
 
         try {
             // Get Prompts
-            const stylePrompt = styles.find(s => s.id === selectedStyle)?.prompt;
-            const lightingPrompt = lightingOptions.find(l => l.id === selectedLighting)?.prompt;
-            const compPrompt = compositionOptions.find(c => c.id === selectedComposition)?.prompt;
+            let stylePrompt = "";
+            styleCategories.forEach(cat => {
+                const found = cat.styles.find(s => s.id === selectedStyle);
+                if (found) stylePrompt = found.prompt;
+            });
+
+            const lightingOption = lightingOptions.find(l => l.id === selectedLighting);
+            const lightingPrompt = lightingOption ? ` Lighting: ${lightingOption.prompt}.` : "";
+
+            const compOption = compositionOptions.find(c => c.id === selectedComposition);
+            const compPrompt = compOption ? ` Composition: ${compOption.prompt}.` : "";
+
+            const activeCat = styleCategories.find(cat => cat.name === selectedCategory);
+            const modelOption = activeCat?.modelOptions?.find(m => m.id === selectedModel);
+            const modelPrompt = modelOption ? ` Interaction: ${modelOption.prompt}.` : "";
 
             // Construct rich prompt
-            const userPrompt = description ? `Additional instructions: ${description}.` : "";
-            const finalPrompt = `Transform this product image. Style: ${stylePrompt}. Lighting: ${lightingPrompt}. Composition: ${compPrompt}. ${userPrompt} 
+            const userPrompt = description ? ` Additional instructions: ${description}.` : "";
+            const finalPrompt = `Transform this product image. Style: ${stylePrompt}.${lightingPrompt}${compPrompt}${modelPrompt}${userPrompt} 
             Ensure the main product identity and shape remains recognizable but make it look like a world-class award-winning professional photograph. 8k resolution, ultra-sharp.`;
 
             // Prepare base64 image (remove header)
@@ -90,19 +196,29 @@ export default function PhotoEnhancerPage() {
                 input_image_mime_type: mimeType
             });
 
-            if (image && image.src) {
-                setResultImage(image.src);
+            // Puter.js might return a successful response object but with an internal error (e.g. insufficient funds)
+            if (image && (image as any).success === false) {
+                throw new Error((image as any).error?.message || "Puter internal error");
+            }
+
+            if (image && (image as any).src) {
+                setResultImage((image as any).src);
             } else if (typeof image === 'string') {
                 setResultImage(image);
             } else if (image instanceof HTMLImageElement) {
                 setResultImage(image.src);
             } else {
                 console.warn("Unexpected response format", image);
+                throw new Error("Format respons tidak dikenali");
             }
 
-        } catch (error) {
+        } catch (error: any) {
             console.error("Generation failed", error);
-            alert("Gagal membuat gambar. Pastikan Anda sudah login ke Puter.com.");
+            setErrorModal({
+                show: true,
+                title: "Gagal Membuat Gambar",
+                message: "Maaf, generate gambar gagal diproses. Hal ini biasanya terjadi karena Saldo Puter Anda habis, Sesi Login berakhir, atau ada kendala teknis lainnya. Silakan cek akun Puter Anda."
+            });
         } finally {
             setIsGenerating(false);
         }
@@ -160,22 +276,46 @@ export default function PhotoEnhancerPage() {
 
                             <div className="mt-6 space-y-6">
                                 {/* STYLE SELECTOR */}
-                                <div>
-                                    <label className="text-sm font-bold text-[#1a1f24] mb-3 block">1. Gaya Visual</label>
-                                    <div className="grid grid-cols-2 gap-2">
-                                        {styles.map(s => (
+                                <div className="space-y-4">
+                                    <label className="text-sm font-bold text-[#1a1f24] block">1. Pilih Kategori & Tema</label>
+
+                                    {/* Category Tabs */}
+                                    <div className="flex flex-wrap gap-2">
+                                        {styleCategories.map(cat => (
                                             <button
-                                                key={s.id}
-                                                onClick={() => setSelectedStyle(s.id)}
-                                                className={`px-3 py-2 rounded-xl text-sm font-medium cursor-pointer text-left transition-all flex items-center space-x-2 ${selectedStyle === s.id
-                                                    ? 'clay-button text-white font-bold'
-                                                    : 'bg-white/70 text-gray-600 hover:bg-[#2ECC71]/10 border border-gray-200'
+                                                key={cat.name}
+                                                onClick={() => {
+                                                    setSelectedCategory(cat.name);
+                                                    setSelectedStyle(cat.styles[0].id);
+                                                    setSelectedModel(null); // Reset model when category changes
+                                                }}
+                                                className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${selectedCategory === cat.name
+                                                    ? 'bg-[#2D3436] text-white shadow-sm'
+                                                    : 'bg-white/50 text-gray-500 hover:bg-gray-200 border border-gray-100'
                                                     }`}
                                             >
-                                                <span>{s.icon}</span>
-                                                <span className="text-xs">{s.name}</span>
+                                                {cat.name}
                                             </button>
                                         ))}
+                                    </div>
+
+                                    {/* Styles for Active Category */}
+                                    <div className="grid grid-cols-2 gap-2 pt-2">
+                                        {styleCategories
+                                            .find(cat => cat.name === selectedCategory)
+                                            ?.styles.map(s => (
+                                                <button
+                                                    key={s.id}
+                                                    onClick={() => setSelectedStyle(s.id)}
+                                                    className={`px-3 py-2.5 rounded-xl text-sm font-medium cursor-pointer text-left transition-all flex items-center space-x-2 ${selectedStyle === s.id
+                                                        ? 'clay-button text-white font-bold scale-[1.02]'
+                                                        : 'bg-white/70 text-gray-600 hover:bg-[#2ECC71]/10 border border-gray-100'
+                                                        }`}
+                                                >
+                                                    <span className="text-lg">{s.icon}</span>
+                                                    <span className="text-[11px] leading-tight font-bold">{s.name}</span>
+                                                </button>
+                                            ))}
                                     </div>
                                 </div>
 
@@ -195,12 +335,20 @@ export default function PhotoEnhancerPage() {
                                                 {c.name}
                                             </button>
                                         ))}
+                                        {selectedComposition && (
+                                            <button
+                                                onClick={() => setSelectedComposition(null)}
+                                                className="px-3 py-2 rounded-xl text-xs cursor-pointer font-medium text-center transition-all border border-red-200 text-red-500 hover:bg-red-50 bg-white/50"
+                                            >
+                                                Batal Pilih
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
 
                                 {/* LIGHTING SELECTOR */}
                                 <div>
-                                    <label className="text-sm font-bold text-[#1a1f24] mb-3 block">3. Pencahayaan</label>
+                                    <label className="text-sm font-bold text-[#1a1f24] mb-3 block">3. Pencahayaan (Opsional)</label>
                                     <div className="flex flex-wrap gap-2">
                                         {lightingOptions.map(l => (
                                             <button
@@ -214,6 +362,43 @@ export default function PhotoEnhancerPage() {
                                                 {l.name}
                                             </button>
                                         ))}
+                                        {selectedLighting && (
+                                            <button
+                                                onClick={() => setSelectedLighting(null)}
+                                                className="px-3 py-1.5 rounded-full text-xs cursor-pointer font-medium transition-all bg-white text-red-500 border border-red-200 hover:bg-red-50"
+                                            >
+                                                Batal Pilih
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* MODEL SELECTOR */}
+                                <div>
+                                    <label className="text-sm font-bold text-[#1a1f24] mb-3 block">4. Kehadiran Model (Opsional)</label>
+                                    <div className="flex flex-wrap gap-2">
+                                        {styleCategories
+                                            .find(cat => cat.name === selectedCategory)
+                                            ?.modelOptions?.map(m => (
+                                                <button
+                                                    key={m.id}
+                                                    onClick={() => setSelectedModel(m.id)}
+                                                    className={`px-3 py-1.5 rounded-full text-xs cursor-pointer font-medium transition-all ${selectedModel === m.id
+                                                        ? 'bg-[#2ECC71] text-white shadow-md'
+                                                        : 'bg-white/80 text-gray-600 hover:bg-[#2ECC71]/10 border border-gray-200'
+                                                        }`}
+                                                >
+                                                    {m.name}
+                                                </button>
+                                            ))}
+                                        {selectedModel && (
+                                            <button
+                                                onClick={() => setSelectedModel(null)}
+                                                className="px-3 py-1.5 rounded-full text-xs cursor-pointer font-medium transition-all bg-white text-red-500 border border-red-200 hover:bg-red-50"
+                                            >
+                                                Tanpa Model
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
 
@@ -311,6 +496,39 @@ export default function PhotoEnhancerPage() {
 
                 </div>
             </div>
+
+            {/* ERROR MODAL */}
+            {errorModal.show && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="clay-card max-w-md w-full p-8 text-center animate-in zoom-in-95 duration-300">
+                        <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 bg-amber-50 text-amber-500 border-2 border-amber-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-10 h-10">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                            </svg>
+                        </div>
+                        <h2 className="text-2xl font-bold text-[#1a1f24] mb-4">{errorModal.title}</h2>
+                        <p className="text-gray-700 font-medium mb-8 leading-relaxed">
+                            {errorModal.message}
+                        </p>
+                        <div className="space-y-3">
+                            <a
+                                href="https://puter.com"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="clay-button w-full py-4 rounded-2xl font-bold block transition-all hover:scale-[1.02] active:scale-[0.98]"
+                            >
+                                Periksa Akun & Saldo Puter
+                            </a>
+                            <button
+                                onClick={() => setErrorModal({ ...errorModal, show: false })}
+                                className="w-full py-3 text-gray-500 font-bold hover:text-gray-700 transition-colors"
+                            >
+                                Mungkin Nanti
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div >
     );
 }

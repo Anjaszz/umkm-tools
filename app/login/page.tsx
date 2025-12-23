@@ -9,12 +9,15 @@ import {
     LockClosedIcon,
     ArrowRightIcon,
     ShoppingBagIcon,
-    ExclamationCircleIcon
+    ExclamationCircleIcon,
+    EyeIcon,
+    EyeSlashIcon
 } from "@heroicons/react/24/outline";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
@@ -31,7 +34,19 @@ export default function LoginPage() {
         });
 
         if (error) {
-            setError(error.message);
+            // Map common Supabase errors to Indonesian
+            let indonesianError = error.message;
+            if (error.message.includes("Invalid login credentials") || error.message.includes("does not exist")) {
+                indonesianError = "Email atau kata sandi yang Anda masukkan salah.";
+            } else if (error.message.includes("Email not confirmed")) {
+                indonesianError = "Email Anda belum dikonfirmasi. Harap periksa kotak masuk email Anda.";
+            } else if (error.message.includes("rate limit")) {
+                indonesianError = "Terlalu banyak percobaan masuk. Harap tunggu beberapa saat.";
+            } else {
+                indonesianError = "Terjadi kesalahan saat masuk. Harap coba lagi.";
+            }
+
+            setError(indonesianError);
             setLoading(false);
         } else {
             router.push("/dashboard");
@@ -94,13 +109,24 @@ export default function LoginPage() {
                             <div className="relative group">
                                 <LockClosedIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-[#2ECC71] transition-colors" />
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="clay-input w-full pl-12 pr-4 py-4 rounded-2xl text-sm font-medium"
+                                    className="clay-input w-full pl-12 pr-12 py-4 rounded-2xl text-sm font-medium"
                                     placeholder="••••••••"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#2ECC71] transition-colors focus:outline-none"
+                                >
+                                    {showPassword ? (
+                                        <EyeSlashIcon className="w-5 h-5" />
+                                    ) : (
+                                        <EyeIcon className="w-5 h-5" />
+                                    )}
+                                </button>
                             </div>
                         </div>
 
