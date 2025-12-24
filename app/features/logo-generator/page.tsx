@@ -10,7 +10,7 @@ import {
     ArrowLeftIcon,
 } from "@heroicons/react/24/outline";
 
-declare const puter: any;
+import puter from '@heyputer/puter.js';
 
 export default function LogoGeneratorPage() {
     const [brandName, setBrandName] = useState("");

@@ -81,6 +81,14 @@ const features: Feature[] = [
         category: "Visual & Media",
         status: "available"
     },
+    {
+        title: "AI Poster & Banner Generator",
+        description: "Buat poster promosi, banner media sosial, dan materi iklan dari foto produk Anda",
+        icon: MegaphoneIcon,
+        href: "/features/poster-generator",
+        category: "Visual & Media",
+        status: "available"
+    },
 
     // Customer Service
     {

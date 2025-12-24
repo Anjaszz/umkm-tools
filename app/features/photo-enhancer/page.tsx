@@ -228,10 +228,21 @@ export default function PhotoEnhancerPage() {
         <div className="min-h-screen bg-[#E8ECEF]">
             <div className="max-w-7xl mx-auto px-6 md:px-12 py-12">
 
-                <div className="flex flex-col lg:flex-row gap-8">
+                {/* HEADER AREA */}
+                <div className="flex items-center space-x-4 mb-8">
+                    <Link href="/dashboard" className="p-2 hover:bg-white/50 rounded-xl transition-all clay-card group">
+                        <ArrowLeftIcon className="w-6 h-6 text-gray-600 group-hover:text-[#2ECC71]" />
+                    </Link>
+                    <div>
+                        <h1 className="text-3xl font-black text-[#1a1f24] tracking-tight">AI Photo Studio</h1>
+                        <p className="text-gray-500 font-medium">Ubah foto produk biasa menjadi luar biasa ✨</p>
+                    </div>
+                </div>
+
+                <div className="flex flex-col lg:flex-row items-start gap-8">
 
                     {/* LEFT PANEL - CONTROLS */}
-                    <div className="w-full lg:w-1/3 space-y-6">
+                    <div className="w-full lg:w-[400px] space-y-6">
                         <div className="clay-card p-6">
                             <div className="flex items-center space-x-3 mb-6">
                                 <div className="p-2 rounded-xl text-white"
@@ -241,7 +252,7 @@ export default function PhotoEnhancerPage() {
                                     }}>
                                     <PhotoIcon className="w-6 h-6" />
                                 </div>
-                                <h1 className="text-2xl font-bold text-[#1a1f24]">AI Studio</h1>
+                                <h1 className="text-2xl font-bold text-[#1a1f24]">Pengaturan</h1>
                             </div>
 
                             {/* UPLOAD BOX */}
@@ -287,7 +298,7 @@ export default function PhotoEnhancerPage() {
                                                 onClick={() => {
                                                     setSelectedCategory(cat.name);
                                                     setSelectedStyle(cat.styles[0].id);
-                                                    setSelectedModel(null); // Reset model when category changes
+                                                    setSelectedModel(null);
                                                 }}
                                                 className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${selectedCategory === cat.name
                                                     ? 'bg-[#2D3436] text-white shadow-sm'
@@ -430,7 +441,7 @@ export default function PhotoEnhancerPage() {
                                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                             </svg>
-                                            Memproses AI...
+                                            Memproses Studio AI...
                                         </span>
                                     ) : (
                                         <span className="flex items-center justify-center">
@@ -443,33 +454,49 @@ export default function PhotoEnhancerPage() {
                         </div>
                     </div>
 
-                    {/* RIGHT PANEL - RESULT */}
-                    <div className="flex-1 min-h-[500px] clay-card p-6 flex flex-col">
+                    {/* RIGHT PANEL - RESULT (Main Preview) */}
+                    <div className="flex-1 w-full min-h-[600px] clay-card p-6 flex flex-col animate-fade-in">
                         <div className="flex-1 flex flex-col items-center justify-center relative rounded-2xl overflow-hidden bg-white/40 border-2 border-dashed border-gray-200"
                             style={{
                                 boxShadow: 'inset 3px 3px 6px rgba(45, 52, 54, 0.05)'
                             }}>
                             {resultImage ? (
-                                <div className="relative w-full h-full min-h-[500px]">
-                                    <Image
+                                <div className="relative w-full h-full min-h-[500px] animate-fade-in flex items-center justify-center p-4">
+                                    <img
                                         src={resultImage}
                                         alt="Result"
-                                        fill
-                                        className="object-contain"
-                                        unoptimized
+                                        className="max-w-full max-h-[700px] object-contain shadow-2xl rounded-lg"
                                     />
+                                    <div className="absolute top-4 right-4 bg-[#2ECC71] text-white px-3 py-1.5 rounded-xl text-[10px] font-black shadow-lg animate-bounce-short z-10">
+                                        BERHASIL DITINGKATKAN ✨
+                                    </div>
                                 </div>
                             ) : (
                                 <div className="text-center p-8 max-w-sm">
-                                    <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
+                                    <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${isGenerating ? 'animate-pulse scale-110' : ''}`}
                                         style={{
                                             background: 'linear-gradient(135deg, #2ECC71 0%, #27ae60 100%)',
                                             boxShadow: '4px 4px 10px rgba(46, 204, 113, 0.3), -2px -2px 6px rgba(255, 255, 255, 0.8)'
                                         }}>
-                                        <SparklesIcon className="w-10 h-10 text-white" />
+                                        <SparklesIcon className={`w-10 h-10 text-white ${isGenerating ? 'animate-spin-slow' : ''}`} />
                                     </div>
-                                    <h3 className="text-xl font-bold text-[#1a1f24] mb-2">Belum ada hasil</h3>
-                                    <p className="text-gray-700 font-medium">Pilih foto, atur gaya, dan tekan tombol Generate untuk melihat keajaiban AI.</p>
+                                    <h3 className="text-xl font-bold text-[#1a1f24] mb-2">
+                                        {isGenerating ? 'Sedang Merender...' : 'Belum ada hasil'}
+                                    </h3>
+                                    <p className="text-gray-700 font-medium mb-4">
+                                        {isGenerating
+                                            ? 'AI sedang bekerja meningkatkan kualitas foto produk Anda. Harap tunggu sebentar.'
+                                            : 'Pilih foto, atur gaya, dan tekan tombol Generate untuk melihat keajaiban AI.'}
+                                    </p>
+
+                                    {isGenerating && (
+                                        <div className="w-full max-w-[200px] mx-auto pt-2">
+                                            <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden shadow-inner">
+                                                <div className="h-full bg-[#2ECC71] animate-loading-bar" />
+                                            </div>
+                                            <p className="text-[10px] font-black text-[#2ECC71] mt-3 animate-pulse uppercase tracking-widest">Memproses Studio AI...</p>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -486,14 +513,13 @@ export default function PhotoEnhancerPage() {
                                 </a>
                                 <button
                                     onClick={() => setResultImage(null)}
-                                    className="px-6 py-3 border-2 border-gray-200 bg-white/70 font-medium rounded-2xl hover:bg-[#2ECC71]/10 transition-colors"
+                                    className="clay-button px-6 py-3 border-2 border-gray-200 bg-white/70 font-medium rounded-2xl hover:bg-[#2ECC71]/10 transition-colors"
                                 >
-                                    Reset
+                                    Ubah Pengaturan
                                 </button>
                             </div>
                         )}
                     </div>
-
                 </div>
             </div>
 
@@ -529,6 +555,6 @@ export default function PhotoEnhancerPage() {
                     </div>
                 </div>
             )}
-        </div >
+        </div>
     );
 }

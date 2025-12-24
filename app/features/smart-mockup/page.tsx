@@ -13,11 +13,15 @@ import {
     TrashIcon,
 } from "@heroicons/react/24/outline";
 
-declare const puter: any;
+import puter from '@heyputer/puter.js';
 
 export default function SmartMockupPage() {
     const [designImage, setDesignImage] = useState<string | null>(null);
     const [mockupImage, setMockupImage] = useState<string | null>(null);
+    const [mockupContext, setMockupContext] = useState("");
+    const [selectedTheme, setSelectedTheme] = useState("studio");
+    const [selectedLighting, setSelectedLighting] = useState("pro_studio");
+    const [selectedAngle, setSelectedAngle] = useState("eye_level");
     const [isGenerating, setIsGenerating] = useState(false);
     const [resultImage, setResultImage] = useState<string | null>(null);
 
@@ -32,6 +36,28 @@ export default function SmartMockupPage() {
         title: "",
         message: ""
     });
+
+    const mockupThemes = [
+        { id: "studio", name: "Clean Studio", icon: "📸", prompt: "Minimalist professional studio background, clean surfaces, neutral elegant tones, high-end photography" },
+        { id: "cafe", name: "Modern Cafe", icon: "☕", prompt: "Modern aesthetic cafe setting, wooden textures, blurred cafe background, cozy warm atmosphere" },
+        { id: "outdoor", name: "Nature/Outdoor", icon: "🌿", prompt: "Natural outdoor setting, soft sunlight, blurred garden or park background, fresh organic vibe" },
+        { id: "urban", name: "Urban/Street", icon: "🏢", prompt: "Trendy urban street background, city bokeh, industrial concrete textures, modern lifestyle vibe" },
+        { id: "luxury", name: "Luxury Interior", icon: "✨", prompt: "Expensive luxury marble interior, gold accents, soft ambient lighting, premium brand aesthetic" }
+    ];
+
+    const lightingOptions = [
+        { id: "pro_studio", name: "Pro Studio", prompt: "Soft multi-point studio lighting, delicate soft shadows, crisp details" },
+        { id: "cinematic", name: "Cinematic", prompt: "Dramatic cinematic lighting, high contrast, focused spotlight, moody atmosphere" },
+        { id: "natural", name: "Golden Hour", prompt: "Warm golden hour sunlight, soft long shadows, glowing highlights" },
+        { id: "neon", name: "Cyber/Neon", prompt: "Vibrant neon accent lighting, cyan and magenta highlights, futuristic tech vibe" }
+    ];
+
+    const angleOptions = [
+        { id: "eye_level", name: "Eye Level", prompt: "Standard eye-level professional product shot" },
+        { id: "top_down", name: "Top Down / Flatlay", prompt: "Flatlay photography from directly above, organized aesthetic" },
+        { id: "close_up", name: "Macro / Close-up", prompt: "Close-up macro photography focusing on texture and details" },
+        { id: "low_angle", name: "Hero / Low Angle", prompt: "Low angle shot making the product look heroic and grand" }
+    ];
 
     const designInputRef = useRef<HTMLInputElement>(null);
     const mockupInputRef = useRef<HTMLInputElement>(null);
@@ -96,12 +122,27 @@ export default function SmartMockupPage() {
 
             const compositeBase64 = canvas.toDataURL('image/png');
 
-            // 2. Use Puter AI to refine and blend
-            const finalPrompt = "Refine this product mockup. Blend the uploaded design/logo perfectly onto the surface of the object (t-shirt/bottle/box). Ensure realistic lighting, shadows, and fabric/material texture flow. The result should look like a high-end commercial product photograph. 8k, ultra-realistic.";
+            const base64Data = compositeBase64.split(',')[1];
+
+            // 2. Use Puter AI to refine and blend with theme
+            const themeObj = mockupThemes.find(t => t.id === selectedTheme);
+            const lightingObj = lightingOptions.find(l => l.id === selectedLighting);
+            const angleObj = angleOptions.find(a => a.id === selectedAngle);
+
+            const contextPrompt = mockupContext ? `The product is: ${mockupContext}. ` : "The object is a commercial product. ";
+            const finalPrompt = `Professional product mockup. 
+                ENVIRONMENT: ${themeObj?.prompt}. 
+                LIGHTING: ${lightingObj?.prompt}. 
+                CAMERA ANGLE: ${angleObj?.prompt}.
+                DESIGN PRESERVATION: DO NOT ALTER, REGENERATE, OR CHANGE THE PROVIDED DESIGN/LOGO. Keep its text, shapes, and colors exactly as they appear in the input image.
+                ACTION: Photorealistically blend the provided design onto the product surface. Only add realistic material textures, 3D mapping (following the product's curvature), and natural light/shadow interactions.
+                The background and environment should be enhanced to match the theme, but the BRAND IDENTITY (the logo) MUST REMAIN 100% IDENTICAL to the source.
+                8k resolution, award-winning commercial photography, ultra-realistic.`;
 
             const image = await puter.ai.txt2img(finalPrompt, {
-                img_data: compositeBase64,
-                model: "gemini-2.5-flash-image-preview", // Updated model reference
+                model: "gemini-2.5-flash-image-preview",
+                input_image: base64Data,
+                input_image_mime_type: "image/png"
             });
 
             if (image && (image as any).success === false) {
@@ -188,6 +229,76 @@ export default function SmartMockupPage() {
                                                 <span className="text-xs font-bold text-gray-500">Foto Kaos/Botol/Gelas Polos</span>
                                             </>
                                         )}
+                                    </div>
+                                </div>
+
+                                {/* CONTEXT DESCRIPTION */}
+                                <div>
+                                    <label className="text-sm font-bold text-[#1a1f24] mb-2 block">3. Deskripsikan Barangnya (Opsional)</label>
+                                    <textarea
+                                        value={mockupContext}
+                                        onChange={(e) => setMockupContext(e.target.value)}
+                                        placeholder="Misal: Gelas kopi putih, Kaos hitam, atau Botol kaca"
+                                        className="clay-input w-full text-sm p-3 h-16 resize-none font-medium text-gray-700 font-mono"
+                                    />
+                                    <p className="text-[10px] text-gray-400 mt-1 font-bold italic">*Contoh: Gelas kopi keramik</p>
+                                </div>
+
+                                {/* THEME SELECTION */}
+                                <div>
+                                    <label className="text-sm font-bold text-[#1a1f24] mb-3 block text-center lg:text-left">4. Pilih Tema Background</label>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {mockupThemes.map((theme) => (
+                                            <button
+                                                key={theme.id}
+                                                onClick={() => setSelectedTheme(theme.id)}
+                                                className={`flex items-center p-3 rounded-2xl transition-all border-2 ${selectedTheme === theme.id
+                                                    ? 'bg-[#2ECC71] text-white border-[#27ae60] shadow-md scale-[1.02]'
+                                                    : 'bg-white text-gray-600 border-gray-100 hover:border-[#2ECC71]/30'
+                                                    }`}
+                                            >
+                                                <span className="text-lg mr-2">{theme.icon}</span>
+                                                <span className="text-[10px] font-black uppercase tracking-tight leading-none">{theme.name}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* LIGHTING SELECTION */}
+                                <div>
+                                    <label className="text-sm font-bold text-[#1a1f24] mb-3 block text-center lg:text-left">5. Pencahayaan & Mood</label>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {lightingOptions.map((light) => (
+                                            <button
+                                                key={light.id}
+                                                onClick={() => setSelectedLighting(light.id)}
+                                                className={`px-3 py-2 rounded-xl text-[10px] font-bold transition-all border-2 ${selectedLighting === light.id
+                                                    ? 'bg-[#2D3436] text-white border-[#000] shadow-sm'
+                                                    : 'bg-white/70 text-gray-600 border-gray-50 hover:bg-white'
+                                                    }`}
+                                            >
+                                                {light.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* ANGLE SELECTION */}
+                                <div>
+                                    <label className="text-sm font-bold text-[#1a1f24] mb-3 block text-center lg:text-left">6. Sudut Pandang Kamera</label>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {angleOptions.map((angle) => (
+                                            <button
+                                                key={angle.id}
+                                                onClick={() => setSelectedAngle(angle.id)}
+                                                className={`px-3 py-2 rounded-xl text-[10px] font-bold transition-all border-2 ${selectedAngle === angle.id
+                                                    ? 'bg-[#3498DB] text-white border-[#2980b9] shadow-sm'
+                                                    : 'bg-white/70 text-gray-600 border-gray-50 hover:bg-white'
+                                                    }`}
+                                            >
+                                                {angle.name}
+                                            </button>
+                                        ))}
                                     </div>
                                 </div>
 
