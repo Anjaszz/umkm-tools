@@ -19,8 +19,11 @@ import {
 } from "@heroicons/react/24/outline";
 
 import puter from '@heyputer/puter.js';
+import { useCredit } from "@/utils/credits";
+import { useRouter } from "next/navigation";
 
 export default function PosterGeneratorPage() {
+    const router = useRouter();
     const [step, setStep] = useState(1);
     const [isGenerating, setIsGenerating] = useState(false);
     const [resultImage, setResultImage] = useState<string | null>(null);
@@ -86,6 +89,18 @@ export default function PosterGeneratorPage() {
         setResultImage(null);
 
         try {
+            // Credit Deduction (1.0)
+            try {
+                await useCredit('poster-generator', 1.0);
+            } catch (creditError: any) {
+                setErrorModal({
+                    show: true,
+                    title: "Gagal Memproses Credit",
+                    message: creditError.message || "Maaf, terjadi kendala saat memproses credit Anda. Harap coba lagi atau hubungi admin."
+                });
+                setIsGenerating(false);
+                return;
+            }
             const formatObj = formats.find(f => f.id === format);
 
             // Logic for Product Preservation
@@ -160,6 +175,7 @@ export default function PosterGeneratorPage() {
             });
         } finally {
             setIsGenerating(false);
+            router.refresh();
         }
     };
 

@@ -14,8 +14,11 @@ import {
 } from "@heroicons/react/24/outline";
 
 import puter from '@heyputer/puter.js';
+import { useCredit } from "@/utils/credits";
+import { useRouter } from "next/navigation";
 
 export default function SmartMockupPage() {
+    const router = useRouter();
     const [designImage, setDesignImage] = useState<string | null>(null);
     const [mockupImage, setMockupImage] = useState<string | null>(null);
     const [mockupContext, setMockupContext] = useState("");
@@ -86,6 +89,18 @@ export default function SmartMockupPage() {
         setResultImage(null);
 
         try {
+            // Credit Deduction (1.0)
+            try {
+                await useCredit('smart-mockup', 1.0);
+            } catch (creditError: any) {
+                setErrorModal({
+                    show: true,
+                    title: "Gagal Memproses Credit",
+                    message: creditError.message || "Maaf, terjadi kendala saat memproses credit Anda. Harap coba lagi atau hubungi admin."
+                });
+                setIsGenerating(false);
+                return;
+            }
             // 1. Create Composite Image using Canvas
             const canvas = canvasRef.current;
             if (!canvas) throw new Error("Canvas not found");
@@ -166,6 +181,7 @@ export default function SmartMockupPage() {
             });
         } finally {
             setIsGenerating(false);
+            router.refresh();
         }
     };
 

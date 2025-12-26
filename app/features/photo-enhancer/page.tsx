@@ -5,6 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeftIcon, PhotoIcon, SparklesIcon, ArrowDownTrayIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import puter from '@heyputer/puter.js';
+import { useCredit } from "@/utils/credits";
+import { useRouter } from "next/navigation";
 
 export default function PhotoEnhancerPage() {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -24,6 +26,7 @@ export default function PhotoEnhancerPage() {
     const [selectedLighting, setSelectedLighting] = useState<string | null>(null);
     const [selectedComposition, setSelectedComposition] = useState<string | null>(null);
     const [selectedModel, setSelectedModel] = useState<string | null>(null);
+    const router = useRouter();
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -162,7 +165,20 @@ export default function PhotoEnhancerPage() {
         setResultImage(null);
 
         try {
-            // Get Prompts
+            // 1. Credit Check & Deduction
+            try {
+                await useCredit('photo-enhancer', 1);
+            } catch (creditError: any) {
+                setErrorModal({
+                    show: true,
+                    title: "Credit Tidak Cukup",
+                    message: "Batas penggunaan gratis Anda telah habis. Silakan hubungi Admin untuk menambah credit atau beralih ke Premium!"
+                });
+                setIsGenerating(false);
+                return;
+            }
+
+            // 2. Get Prompts
             let stylePrompt = "";
             styleCategories.forEach(cat => {
                 const found = cat.styles.find(s => s.id === selectedStyle);
@@ -221,6 +237,7 @@ export default function PhotoEnhancerPage() {
             });
         } finally {
             setIsGenerating(false);
+            router.refresh(); // Update header tokens
         }
     };
 

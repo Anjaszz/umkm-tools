@@ -4,6 +4,8 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeftIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { useCredit } from "@/utils/credits";
+import { useRouter } from "next/navigation";
 
 interface StyleOption {
   id: string;
@@ -155,6 +157,7 @@ const writingStyles: StyleOption[] = [
 ];
 
 export default function ProductDescriptionGenerator() {
+  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [additionalInfo, setAdditionalInfo] = useState("");
 
@@ -233,6 +236,14 @@ export default function ProductDescriptionGenerator() {
     setError("");
 
     try {
+      // Credit Deduction (0.25)
+      try {
+        await useCredit('image-analyzer', 0.25);
+      } catch (creditError: any) {
+        setError(creditError.message || "Gagal memproses credit. Harap hubungi admin.");
+        setLoading(null);
+        return;
+      }
       const base64Data = selectedImage.split(",")[1];
       const mimeType = selectedImage.split(";")[0].split(":")[1];
 
@@ -305,6 +316,7 @@ export default function ProductDescriptionGenerator() {
       console.error(err);
     } finally {
       setLoading(null);
+      router.refresh();
     }
   };
 

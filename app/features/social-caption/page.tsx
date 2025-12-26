@@ -4,6 +4,8 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeftIcon, MegaphoneIcon, PhotoIcon } from "@heroicons/react/24/outline";
+import { useCredit } from "@/utils/credits";
+import { useRouter } from "next/navigation";
 
 interface StyleOption {
     id: string;
@@ -79,6 +81,7 @@ const tones: StyleOption[] = [
 ];
 
 export default function SocialCaptionGenerator() {
+    const router = useRouter();
     const [productName, setProductName] = useState("");
     const [storeName, setStoreName] = useState("");
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -122,6 +125,15 @@ export default function SocialCaptionGenerator() {
         setGeneratedCaption(null);
 
         try {
+            // Credit Deduction (0.25)
+            try {
+                await useCredit('social-caption', 0.25);
+            } catch (creditError: any) {
+                setError(creditError.message || "Gagal memproses credit. Harap hubungi admin.");
+                setLoading(false);
+                return;
+            }
+
             const platformPrompt = platforms.find(p => p.id === selectedPlatform)?.promptPart;
             const tonePrompt = tones.find(t => t.id === selectedTone)?.promptPart;
 
@@ -170,6 +182,7 @@ Instruksi:
             setError(err.message || "Terjadi kesalahan saat generate. Silakan coba lagi.");
         } finally {
             setLoading(false);
+            router.refresh();
         }
     };
 

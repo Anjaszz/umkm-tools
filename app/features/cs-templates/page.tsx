@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeftIcon, ChatBubbleLeftRightIcon, ClipboardIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { useCredit } from "@/utils/credits";
+import { useRouter } from "next/navigation";
 
 interface Option {
     id: string;
@@ -30,6 +32,7 @@ const tones: Option[] = [
 ];
 
 export default function CSTemplateGenerator() {
+    const router = useRouter();
     const [selectedType, setSelectedType] = useState<string>("");
     const [selectedTone, setSelectedTone] = useState<string>(tones[0].id);
     const [customerName, setCustomerName] = useState("");
@@ -46,10 +49,17 @@ export default function CSTemplateGenerator() {
 
     const handleGenerate = async () => {
         setLoading(true);
-        setError("");
         setGeneratedMessage("");
 
         try {
+            // Credit Deduction (0.25)
+            try {
+                await useCredit('cs-templates', 0.25);
+            } catch (creditError: any) {
+                setError(creditError.message || "Gagal memproses credit. Harap hubungi admin.");
+                setLoading(false);
+                return;
+            }
             const typeOption = messageTypes.find(t => t.id === selectedType);
             const toneOption = tones.find(t => t.id === selectedTone);
 
@@ -76,6 +86,7 @@ export default function CSTemplateGenerator() {
             setError(err.message || "Terjadi kesalahan.");
         } finally {
             setLoading(false);
+            router.refresh();
         }
     };
 

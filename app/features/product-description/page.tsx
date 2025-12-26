@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeftIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { useCredit } from "@/utils/credits";
+import { useRouter } from "next/navigation";
 
 interface StyleOption {
     id: string;
@@ -154,6 +156,7 @@ const writingStyles: StyleOption[] = [
 ];
 
 export default function ProductDescriptionGenerator() {
+    const router = useRouter();
     // Input States
     const [productName, setProductName] = useState("");
     const [productCategory, setProductCategory] = useState("");
@@ -234,6 +237,14 @@ Informasi Produk:
         setError("");
 
         try {
+            // Credit Deduction (0.25)
+            try {
+                await useCredit('product-description', 0.25);
+            } catch (creditError: any) {
+                setError(creditError.message || "Gagal memproses credit. Harap hubungi admin.");
+                setLoading(null);
+                return;
+            }
             // Generate Title
             if (type === 'title' || type === 'both') {
                 let titlePrompt = customTitlePrompt;
@@ -294,6 +305,7 @@ Informasi Produk:
             console.error(err);
         } finally {
             setLoading(null);
+            router.refresh();
         }
     };
 

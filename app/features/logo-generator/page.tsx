@@ -11,8 +11,11 @@ import {
 } from "@heroicons/react/24/outline";
 
 import puter from '@heyputer/puter.js';
+import { useCredit } from "@/utils/credits";
+import { useRouter } from "next/navigation";
 
 export default function LogoGeneratorPage() {
+    const router = useRouter();
     const [brandName, setBrandName] = useState("");
     const [slogan, setSlogan] = useState("");
     const [brandDescription, setBrandDescription] = useState("");
@@ -50,6 +53,18 @@ export default function LogoGeneratorPage() {
         setResultImage(null);
 
         try {
+            // Credit Deduction (1.0)
+            try {
+                await useCredit('logo-generator', 1.0);
+            } catch (creditError: any) {
+                setErrorModal({
+                    show: true,
+                    title: "Gagal Memproses Credit",
+                    message: creditError.message || "Maaf, terjadi kendala saat memproses credit Anda. Harap coba lagi atau hubungi admin."
+                });
+                setIsGenerating(false);
+                return;
+            }
             const selectedStyle = logoStyles.find(s => s.id === style);
 
             const logoTypePrompt = logoType === "both"
@@ -97,6 +112,7 @@ export default function LogoGeneratorPage() {
             });
         } finally {
             setIsGenerating(false);
+            router.refresh();
         }
     };
 

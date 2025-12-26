@@ -4,8 +4,11 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeftIcon, PhotoIcon, ArrowDownTrayIcon, SwatchIcon } from "@heroicons/react/24/outline";
+import { useCredit } from "@/utils/credits";
+import { useRouter } from "next/navigation";
 
 export default function BackgroundRemover() {
+    const router = useRouter();
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [processedImage, setProcessedImage] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -33,6 +36,14 @@ export default function BackgroundRemover() {
         setError("");
 
         try {
+            // Credit Deduction (1.0)
+            try {
+                await useCredit('background-editor', 1.0);
+            } catch (creditError: any) {
+                setError(creditError.message || "Gagal memproses credit. Harap hubungi admin.");
+                setLoading(false);
+                return;
+            }
             const base64Data = selectedImage.split(",")[1];
 
             const response = await fetch("/api/remove-background", {
@@ -56,6 +67,7 @@ export default function BackgroundRemover() {
             setError(err.message || "Terjadi kesalahan. Pastikan API Key remove.bg sudah benar.");
         } finally {
             setLoading(false);
+            router.refresh();
         }
     };
 
@@ -139,7 +151,7 @@ export default function BackgroundRemover() {
                                             className="text-blue-600 focus:ring-blue-500"
                                         />
                                         <span className="text-sm font-bold text-[#1a1f24]">
-                                            Normal (Gratis)
+                                            Normal
                                         </span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer">
