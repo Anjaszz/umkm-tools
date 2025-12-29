@@ -141,7 +141,7 @@ export default function ProfilePage() {
                                     {profile?.role || 'Free'}
                                 </div>
                                 {profile?.role !== 'premium' && (
-                                    <Link href="#" className="text-xs text-[#2ECC71] font-bold mt-2 inline-block hover:underline">
+                                    <Link href="/premium" className="text-xs text-[#2ECC71] font-bold mt-2 inline-block hover:underline">
                                         Upgrade ke Premium
                                     </Link>
                                 )}
